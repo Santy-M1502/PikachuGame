@@ -1,11 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ChatButton } from '../../components/chat-button/chat-button';
 
 @Component({
   selector: 'app-quien-soy',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, ChatButton],
   templateUrl: './quien-soy.html',
   styleUrls: ['./quien-soy.css']
 })
