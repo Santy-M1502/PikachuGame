@@ -1,4 +1,4 @@
-/* Página general */
+
 .home-page {
   background: linear-gradient(#fecb00, #ff9400);
   min-height: 100vh;
@@ -6,10 +6,10 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 20px;
 }
 
-/* Header */
 .home-header {
   text-align: center;
   margin-bottom: 10px;
@@ -22,13 +22,14 @@
   margin: 0;
 }
 
-/* Tarjetas de secciones */
 .card {
   background: #fff;
   padding: 25px 20px;
   border-radius: 16px;
   box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
   text-align: center;
+  min-width: 30dvw;
+  margin: 1rem 0;
 }
 
 .card h2 {
@@ -41,7 +42,6 @@
   margin-bottom: 15px;
 }
 
-/* Botones */
 .btn {
   background-color: #FFD93D;
   color: #4F200D;
@@ -58,7 +58,6 @@
   transform: translateY(-2px);
 }
 
-/* Botón flotante de chat */
 .chat-button {
   position: fixed;
   bottom: 20px;
@@ -79,4 +78,10 @@
 
 .chat-button img:hover {
   transform: scale(1.1);
+}
+
+.section-container{
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }

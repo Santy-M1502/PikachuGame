@@ -1,0 +1,28 @@
+
+.footer {
+  background-color: #ffcb05;
+  color: #4F200D;
+  padding: 15px 20px;
+  text-align: center;
+  border-top: 2px solid #4F200D;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 10px 0 0 0;
+  padding: 0;
+}
+
+.footer-links li a {
+  text-decoration: none;
+  color: #4F200D;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+
+.footer-links li a:hover {
+  color: #ff1c1c;
+}

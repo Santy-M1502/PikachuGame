@@ -1,0 +1,47 @@
+.quien-soy-container {
+  padding: 40px;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url('/assets/background.png');
+  background-position: bottom;
+  color: #4F200D;
+  min-height: 100dvh;
+  text-align: center;
+  
+}
+
+.loading, .error{
+  height: 100dvh;
+  font-size: 5rem;
+  text-align: center;
+}
+
+.perfil, .explicacion-juego{
+    padding: 1rem;
+    background-color: #ffffff99;
+    border-radius: 10px;
+}
+
+.perfil img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  border: 4px solid #4F200D;
+}
+
+.perfil h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.perfil p {
+  margin: 5px 0;
+}
+
+.explicacion-juego {
+  margin-top: 30px;
+  max-width: 600px;
+}

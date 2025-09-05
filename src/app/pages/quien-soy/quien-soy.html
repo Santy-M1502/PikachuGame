@@ -1,1 +1,30 @@
-<p>quien-soy works!</p>
+<div>
+  @if(loading){
+    <div class="loading">
+      Cargando usuario...
+    </div>
+  }
+  
+
+  @if(error){
+    <div class="error">
+      {{ error }}
+    </div>
+  }
+  
+
+  <div class="quien-soy-container" *ngIf="usuario">
+    <div class="perfil">
+      <img [src]="usuario.avatar_url" alt="Foto de perfil">
+      <h2>{{ usuario.name }}</h2>
+      <p><strong>Usuario:</strong> {{ usuario.login }}</p>
+      <p *ngIf="usuario.location"><strong>Ubicación:</strong> {{ usuario.location }}</p>
+      <p><strong>Repositorios públicos:</strong> {{ usuario.public_repos }}</p>
+    </div>
+
+    <div class="explicacion-juego">
+      <h3>Mi juego propio</h3>
+      <p>Próximamente....</p>
+    </div>
+  </div>
+</div>
