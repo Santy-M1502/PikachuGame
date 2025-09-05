@@ -1,0 +1,56 @@
+<div class="login-page ion-padding" scroll-y="false">
+  <div class="login-container">
+    <img src="../../../assets/frontPikachu.png" alt="" class="frontPikachu">
+    <h1 class="login-title">Juga con pikachu</h1>
+    <div>
+      <div>
+        <div>
+          <div position="stacked">Email</div>
+          <input 
+            [value]="email()" 
+            (input)="email.set($any($event.target).value)" 
+            type="email"
+            placeholder="Ejemplo@email.com"
+            />
+        </div>
+        <div color="danger" *ngIf="showErrors() && !isEmailValid()">
+          <p>El email no es válido</p>
+        </div>
+
+        <div>
+          <div position="stacked">
+          <div position="stacked">Password</div>
+          <input 
+            [value]="password()" 
+            (input)="password.set($any($event.target).value)" 
+            type="password"
+            placeholder="123456"
+            />
+        <div>
+        @if(showErrors() && !isPasswordValid()){
+            <div color="danger">
+            <p>La contraseña debe tener al menos 6 caracteres</p>
+            </div>
+        }
+        
+        <div (click)="login()" expand="block" class="login-btn" color="none">
+          Iniciar Sesión
+        </div>
+
+        <p class="signup-text">
+          ¿No tienes cuenta?
+          <a (click)="register()">Regístrate</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal de error -->
+<div class="modal-backdrop" *ngIf="showModal()">
+  <div class="modal">
+    <h3>Error de inicio de sesión</h3>
+    <p>{{ modalMessage() }}</p>
+    <button class="modal-btn" (click)="closeModal()">Cerrar</button>
+  </div>
+</div>
+

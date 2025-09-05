@@ -1,0 +1,124 @@
+/* Página general */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(#fecb00,#ff9400);
+  box-sizing: border-box;
+}
+
+/* Contenedor del register */
+.login-container {
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 16px;
+  box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+  width: 100%;
+  max-width: 420px; /* un poco más ancho que login */
+  text-align: center;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Títulos */
+.login-title {
+  color: #4F200D;
+  font-size: 28px;
+  margin: 0;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.login-subtitle {
+  color: #6a4e42;
+  font-size: 18px;
+  margin: 0 0 1.5rem 0;
+  font-weight: 500;
+}
+
+/* Labels */
+[position="stacked"] {
+  display: block;
+  text-align: left;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #4F200D;
+  font-weight: 500;
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #FFD93D;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: #FF9A00;
+}
+
+/* Mensajes de error */
+[color="danger"] p,
+.error-text {
+  margin: -10px 0 12px 0;
+  font-size: 13px;
+  color: #e63946;
+  text-align: left;
+}
+
+/* Botón register */
+.login-btn {
+  background-color: #FFD93D;
+  color: #4F200D;
+  font-weight: bold;
+  text-align: center;
+  padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.login-btn:hover {
+  background-color: #FF9A00;
+  transform: translateY(-2px);
+}
+
+/* Texto de login */
+.signup-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #4F200D;
+}
+
+.signup-text a {
+  color: #FF9A00;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.signup-text a:hover {
+  text-decoration: underline;
+}
+
+/* Imagen inferior Pikachu */
+.frontPikachu {
+  position: absolute;
+  top: -68px;            
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;          
+  height: auto;
+  pointer-events: none;  
+  z-index: 2;            
+}
+
+

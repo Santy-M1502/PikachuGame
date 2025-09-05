@@ -1,0 +1,88 @@
+
+<div class="login-page ion-padding" scroll-y="false">
+  <div class="login-container">
+    <img src="../../../assets/frontPikachu.png" alt="" class="frontPikachu">
+    <h1 class="login-title">Crea tu cuenta</h1>
+    <h2 class="login-subtitle">Pikachu Games</h2>
+
+    <div>
+      <div>
+        <div position="stacked">Email</div>
+        <input
+          [value]="email()"
+          (input)="email.set($any($event.target).value)"
+          type="email"
+          placeholder="Ejemplo@email.com"
+        />
+      </div>
+      @if(showErrors() && !isEmailValid(email())){
+        <div color="danger">
+            <p>El email no es válido</p>
+        </div>
+      }
+      
+
+      <div>
+        <div position="stacked">Confirmar Email</div>
+        <input
+          [value]="confirmEmail()"
+          (input)="confirmEmail.set($any($event.target).value)"
+          type="email"
+          placeholder="Repite tu email"
+        />
+      </div>
+      @if(showErrors() && !areEqual(email(), confirmEmail())){
+        <div color="danger">
+            <p>Los emails no coinciden</p>
+        </div>
+      }
+      
+
+      <div>
+        <div position="stacked">Contraseña</div>
+        <input
+          [value]="password()"
+          (input)="password.set($any($event.target).value)"
+          type="password"
+          placeholder="TuContraseña"
+        />
+      </div>
+      @if(showErrors() && !isPasswordValid(password())){
+        <div color="danger">
+            <p>La contraseña debe tener al menos 6 caracteres</p>
+        </div>
+      }
+
+      <div>
+        <div position="stacked">Confirmar Contraseña</div>
+        <input
+          [value]="confirmPassword()"
+          (input)="confirmPassword.set($any($event.target).value)"
+          type="password"
+          placeholder="Repite tu contraseña"
+        />
+      </div>
+      @if(showErrors() && !areEqual(password(), confirmPassword())){
+        <div color="danger">
+            <p>Las contraseñas no coinciden</p>
+        </div>
+      }
+      
+
+       @if(errorMessage()){
+        <div>
+            <p class="error-text">{{ errorMessage() }}</p>
+        </div>
+      }
+
+      <div (click)="register()" expand="block" class="login-btn" color="none">
+        Registrarse
+      </div>
+
+      <p class="signup-text">
+        ¿Ya tienes cuenta?
+        <a (click)="goToLogin()">Inicia Sesión</a>
+      </p>
+    </div>
+  </div>
+</div>
