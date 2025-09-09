@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ChatButton } from '../../components/chat-button/chat-button';
 
 @Component({
@@ -9,5 +9,9 @@ import { ChatButton } from '../../components/chat-button/chat-button';
   styleUrl: './bienvenida.css'
 })
 export class Bienvenida {
+  constructor(private router: Router) {}
 
+  openChat() {
+    this.router.navigate(['/chat']);
+  }
 }

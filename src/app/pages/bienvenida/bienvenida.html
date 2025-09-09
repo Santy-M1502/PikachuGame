@@ -1,29 +1,29 @@
 <div class="home-page">
-
   <div class="section-container">
-      <section class="card">
-        <h2>🎮 Juegos</h2>
-        <p>Explora nuestra colección de juegos inspirados en Pokémon y compite con otros entrenadores.</p>
-        <button class="btn">Ver juegos</button>
-      </section>
+    <article class="pokeball-card" aria-label="Juegos">
+      <div class="pk-title">Juegos</div>
+      <div class="pk-desc">Explora nuestra colección de juegos inspirados en Pokémon y compite con otros entrenadores.</div>
+      <button class="pk-center-btn" routerLink="/juegos" title="Ver juegos">▶</button>
+    </article>
 
-      <section class="card">
-        <h2>📝 Experiencia</h2>
-        <p>Analiza tu experiencia, puntos o tiempos de cada juego.</p>
-        <button class="btn">Ver registro</button>
-      </section>
+    <article class="pokeball-card" aria-label="Experiencia">
+      <div class="pk-title">Experiencia</div>
+      <div class="pk-desc">Analiza tu experiencia, puntos o tiempos de cada juego.</div>
+      <button class="pk-center-btn" routerLink="/registro" title="Ver registro">▶</button>
+    </article>
 
-      <section class="card">
-        <h2>💬 Chat en vivo</h2>
-        <p>Conéctate con otros jugadores en tiempo real y comparte tu experiencia.</p>
-        <button class="btn">Entrar al chat</button>
-      </section>
+    <article class="pokeball-card" aria-label="Chat en vivo">
+      <div class="pk-title">Chat en vivo</div>
+      <div class="pk-desc">Conéctate con otros jugadores en tiempo real y comparte tu experiencia.</div>
+      <button class="pk-center-btn" (click)="openChat()" title="Entrar al chat">▶</button>
+    </article>
 
-      <section class="card" id="sobre-mi">
-        <h2>:D Sobre Mi</h2>
-        <p>Información y datos del estudiante, creador de esta app.</p>
-        <button class="btn" routerLink="/quien-soy">¿Quien soy?</button>
-      </section>
+    <article class="pokeball-card" aria-label="Sobre mi">
+      <div class="pk-title">Sobre mí</div>
+      <div class="pk-desc">Información y datos del estudiante, creador de esta app.</div>
+      <button class="pk-center-btn" routerLink="/quien-soy" title="Quién soy">▶</button>
+    </article>
   </div>
+
   <app-chat-button></app-chat-button>
 </div>

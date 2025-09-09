@@ -22,15 +22,26 @@
   color: #4F200D;
 }
 
+.logout-btn {
+  background: #ff1c1c;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: .3rem;
+  border-radius: 10px;
+}
+
 .navbar-links {
   list-style: none;
   display: flex;
   gap: 15px;
   margin: 0;
   padding: 0;
+  align-items: center;
 }
 
-.navbar-links li a {
+.navbar-links li a, .logout-btn {
   text-decoration: none;
   color: #4F200D;
   font-weight: bold;
@@ -39,4 +50,8 @@
 
 .navbar-links li a:hover {
   color: #ff1c1c;
+}
+
+.logout-btn:hover{
+  color: #ffcb05;
 }
