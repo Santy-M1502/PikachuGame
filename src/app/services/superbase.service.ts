@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '../../supabase.config';
 
-// src/app/services/supabase.service.ts
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +25,12 @@ export class SupabaseService {
 
   // Registro
   signUp(email: string, password: string) {
-    return this.supabase.auth.signUp({ email, password});
+    return this.supabase.auth.signUp({ email, password });
+  }
+
+  // Insertar datos extra en tabla de usuarios
+  async insertProfile(profile: { id: string; nombre: string; apellido: string; edad: number }) {
+    return this.supabase.from('profiles').insert(profile);
   }
 
   // Logout
@@ -34,7 +38,7 @@ export class SupabaseService {
     return this.supabase.auth.signOut();
   }
 
-  // Obtener cliente
+  // Obtener cliente si es necesario
   get client() {
     return this.supabase;
   }

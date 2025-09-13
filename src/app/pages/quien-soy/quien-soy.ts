@@ -10,6 +10,7 @@ import { ChatButton } from '../../components/chat-button/chat-button';
   templateUrl: './quien-soy.html',
   styleUrls: ['./quien-soy.css']
 })
+
 export class QuienSoy implements OnInit {
   usuario: any = null;
   username: string = 'Santy-M1502';

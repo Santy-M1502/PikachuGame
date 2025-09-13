@@ -148,3 +148,30 @@ input:focus {
 .modal-btn:hover {
   background: #FF9A00;
 }
+
+.fast-access {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.pokeball-btn {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  transition: transform 0.2s;
+}
+
+.pokeball-btn img {
+  width: 100%;
+  height: 100%;
+}
+
+.pokeball-btn:hover {
+  transform: scale(1.1);
+}

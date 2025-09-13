@@ -14,7 +14,6 @@ export class Login {
   password = signal('');
   showErrors = signal(false);
 
-  // 🔹 estado modal
   showModal = signal(false);
   modalMessage = signal('');
 
@@ -36,21 +35,27 @@ export class Login {
   }
 
   async login() {
-    this.showErrors.set(true);
-
-    if (!this.isEmailValid() || !this.isPasswordValid()) {
-      return;
-    }
-
-    const { error } = await this.supabaseService.signIn(this.email(), this.password());
-    if (error) {
-      console.error(error.message);
-      this.modalMessage.set('Usuario o contraseña incorrectos. Inténtalo de nuevo.');
-      this.showModal.set(true);
-    } else {
-      this.router.navigate(['/bienvenida']);
-    }
+  this.showErrors.set(true);
+  if (!this.isEmailValid() || !this.isPasswordValid()) {
+    return;
   }
+  const { data, error } = await this.supabaseService.signIn(
+    this.email(),
+    this.password()
+  );
+  if (error) {
+    console.error(error.message);
+    this.modalMessage.set('Usuario o contraseña incorrectos. Inténtalo de nuevo.');
+    this.showModal.set(true);
+  } else {
+    localStorage.setItem('token', data.session.access_token);
+
+    localStorage.setItem('user', JSON.stringify(data.user));
+
+    this.router.navigate(['/bienvenida']);
+  }
+}
+
 
   closeModal() {
     this.showModal.set(false);
@@ -60,18 +65,22 @@ export class Login {
     this.router.navigate(['/register']);
   }
 
-  fillQuickLogin1() {
-    this.email.set('santy15021502tw@gmail.com');
-    this.password.set('123456');
+  async quickLogin1() {
+  this.email.set('prueba@gmail.com');
+  this.password.set('prueba');
+  await this.login();
   }
 
-  fillQuickLogin2() {
-    this.email.set('santy150215022@gmail.com');
-    this.password.set('123456');
+  async quickLogin2() {
+    this.email.set('prueba2@gmail.com');
+    this.password.set('prueba');
+    await this.login();
   }
 
-  fillQuickLogin3() {
-    this.email.set('santy150215024@gmail.com');
-    this.password.set('ABCDEF');
+  async quickLogin3() {
+    this.email.set('prueba3@gmail.com');
+    this.password.set('prueba');
+    await this.login();
   }
+
 }

@@ -12,8 +12,8 @@
     </div>
   }
   
-
-  <div class="quien-soy-container" *ngIf="usuario">
+  @if(usuario){
+  <div class="quien-soy-container">
     <div class="perfil">
       <img [src]="usuario.avatar_url" alt="Foto de perfil">
       <h2>{{ usuario.name }}</h2>
@@ -28,4 +28,5 @@
     </div>
     <app-chat-button></app-chat-button>
   </div>
+}
 </div>
