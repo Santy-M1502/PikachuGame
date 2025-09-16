@@ -13,6 +13,9 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./nav-bar.css']
 })
 export class NavBar {
+
+  menuOpen = false;
+
   constructor(
     private supabaseService: SupabaseService,
     private router: Router,
@@ -29,5 +32,9 @@ export class NavBar {
     localStorage.clear();
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
   }
 }

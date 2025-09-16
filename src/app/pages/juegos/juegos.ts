@@ -4,11 +4,12 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ChatButton } from "../../components/chat-button/chat-button";
 
 @Component({
   selector: 'app-juegos',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ChatButton],
   templateUrl: './juegos.html',
   styleUrls: ['./juegos.css']
 })
