@@ -4,101 +4,76 @@
     <h1 class="login-title">Crea tu cuenta</h1>
     <h2 class="login-subtitle">Pikachu Games</h2>
 
-    <div>
-      <!-- Email -->
-      <div>
-        <div position="stacked">Email</div>
-        <input [value]="email()" (input)="email.set($any($event.target).value)" type="email" placeholder="Ejemplo@email.com" />
-      </div>
-      <div *ngIf="showErrors() && !isEmailValid(email())">
-        <p class="error-text">El email no es válido</p>
+    <div class="register-form">
+      <div class="form-column">
+        <div>
+          <div position="stacked">Email</div>
+          <input [value]="email()" (input)="email.set($any($event.target).value)" type="email" placeholder="Ejemplo@email.com" />
+        </div>
+        <div *ngIf="showErrors() && !isEmailValid(email())">
+          <p class="error-text">El email no es válido</p>
+        </div>
+
+        <div>
+          <div position="stacked">Confirmar Email</div>
+          <input [value]="confirmEmail()" (input)="confirmEmail.set($any($event.target).value)" type="email" placeholder="Repite tu email" />
+        </div>
+        <div *ngIf="showErrors() && !areEqual(email(), confirmEmail())">
+          <p class="error-text">Los emails no coinciden</p>
+        </div>
+
+        <div>
+          <div position="stacked">Nombre</div>
+          <input [value]="nombre()" (input)="nombre.set($any($event.target).value)" type="text" placeholder="Tu nombre" />
+        </div>
+        <div *ngIf="showErrors() && !isNameValid(nombre())">
+          <p class="error-text">El nombre debe tener al menos 2 caracteres</p>
+        </div>
+
+        <div>
+          <div position="stacked">Apellido</div>
+          <input [value]="apellido()" (input)="apellido.set($any($event.target).value)" type="text" placeholder="Tu apellido" />
+        </div>
+        <div *ngIf="showErrors() && !isNameValid(apellido())">
+          <p class="error-text">El apellido debe tener al menos 2 caracteres</p>
+        </div>
       </div>
 
-      <div>
-        <div position="stacked">Confirmar Email</div>
-        <input [value]="confirmEmail()" (input)="confirmEmail.set($any($event.target).value)" type="email" placeholder="Repite tu email" />
-      </div>
-      <div *ngIf="showErrors() && !areEqual(email(), confirmEmail())">
-        <p class="error-text">Los emails no coinciden</p>
-      </div>
+      <div class="form-column">
+        <div>
+          <div position="stacked">Contraseña</div>
+          <input [value]="password()" (input)="password.set($any($event.target).value)" type="password" placeholder="TuContraseña" />
+        </div>
+        <div *ngIf="showErrors() && !isPasswordValid(password())">
+          <p class="error-text">La contraseña debe tener al menos 6 caracteres</p>
+        </div>
 
-      <!-- Contraseña -->
-      <div>
-        <div position="stacked">Contraseña</div>
-        <input [value]="password()" (input)="password.set($any($event.target).value)" type="password" placeholder="TuContraseña" />
-      </div>
-      <div *ngIf="showErrors() && !isPasswordValid(password())">
-        <p class="error-text">La contraseña debe tener al menos 6 caracteres</p>
-      </div>
+        <div>
+          <div position="stacked">Confirmar Contraseña</div>
+          <input [value]="confirmPassword()" (input)="confirmPassword.set($any($event.target).value)" type="password" placeholder="Repite tu contraseña" />
+        </div>
+        <div *ngIf="showErrors() && !areEqual(password(), confirmPassword())">
+          <p class="error-text">Las contraseñas no coinciden</p>
+        </div>
 
-      <div>
-        <div position="stacked">Confirmar Contraseña</div>
-        <input [value]="confirmPassword()" (input)="confirmPassword.set($any($event.target).value)" type="password" placeholder="Repite tu contraseña" />
-      </div>
-      <div *ngIf="showErrors() && !areEqual(password(), confirmPassword())">
-        <p class="error-text">Las contraseñas no coinciden</p>
-      </div>
-
-      <!-- Nombre -->
-      <div>
-        <div position="stacked">Nombre</div>
-        <input [value]="nombre()" (input)="nombre.set($any($event.target).value)" type="text" placeholder="Tu nombre" />
-      </div>
-      <div *ngIf="showErrors() && !isNameValid(nombre())">
-        <p class="error-text">El nombre debe tener al menos 2 caracteres</p>
-      </div>
-
-      <!-- Apellido -->
-      <div>
-        <div position="stacked">Apellido</div>
-        <input [value]="apellido()" (input)="apellido.set($any($event.target).value)" type="text" placeholder="Tu apellido" />
-      </div>
-      <div *ngIf="showErrors() && !isNameValid(apellido())">
-        <p class="error-text">El apellido debe tener al menos 2 caracteres</p>
-      </div>
-
-      <!-- Edad -->
-      <div>
-        <div position="stacked">Edad</div>
-        <input [value]="edad()" (input)="edad.set(+($any($event.target).value))" type="number" placeholder="Tu edad" />
-      </div>
-      <div *ngIf="showErrors() && !isAgeValid(edad())">
-        <p class="error-text">Edad inválida</p>
-      </div>
-
-      <!-- Botón general -->
-      <div (click)="register()" expand="block" class="login-btn" color="none">
-        Registrarse
-      </div>
-
-      <!-- Link a login -->
-      <p class="signup-text">
-        ¿Ya tienes cuenta?
-        <a (click)="goToLogin()">Inicia Sesión</a>
-      </p>
-
-      <!-- Mensaje de error general -->
-      <div *ngIf="errorMessage()">
-        <p class="error-text">{{ errorMessage() }}</p>
+        <div>
+          <div position="stacked">Edad</div>
+          <input [value]="edad()" (input)="edad.set(+($any($event.target).value))" type="number" placeholder="Tu edad" />
+        </div>
+        <div *ngIf="showErrors() && !isAgeValid(edad())">
+          <p class="error-text">Edad inválida</p>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- Modal de éxito -->
-<div *ngIf="showSuccessModal()">
-  <div class="modal-backdrop">
-    <div class="modal">
-      <h3>¡Registro exitoso!</h3>
-      <p>Tu cuenta se ha creado correctamente.</p>
-      <button class="modal-btn" (click)="goToLogin()">Ir al login</button>
+    <div (click)="register()" class="login-btn">Registrarse</div>
+
+    <p class="signup-text">
+      ¿Ya tienes cuenta? <a (click)="goToLogin()">Inicia Sesión</a>
+    </p>
+
+    <div *ngIf="errorMessage()">
+      <p class="error-text">{{ errorMessage() }}</p>
     </div>
-  </div>
-</div>
-<div class="modal-backdrop" *ngIf="showModal()">
-  <div class="modal">
-    <h3>Error de inicio de sesión</h3>
-    <p>{{ modalMessage() }}</p>
-    <button class="modal-btn" (click)="closeModal()">Cerrar</button>
   </div>
 </div>

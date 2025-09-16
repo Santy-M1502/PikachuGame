@@ -2,12 +2,13 @@ import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseService } from '../../services/superbase.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.html',
   styleUrls: ['./register.css'],
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
 })
 export class Register {
   email = signal('');

@@ -55,3 +55,24 @@
 .logout-btn:hover{
   color: #ffcb05;
 }
+
+.login, .register{
+  padding: .5rem 1rem;
+}
+
+.login{
+  background-color: #ff1c1c;
+}
+
+.login:hover{
+  color: #ffcb05 !important;
+}
+
+.register{
+  background-color: #4F200D;
+  color: #ffcb05 !important;
+}
+
+.register:hover{
+  color: #ff1c1c !important;
+}

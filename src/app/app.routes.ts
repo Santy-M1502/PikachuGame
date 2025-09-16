@@ -5,11 +5,12 @@ import { Bienvenida } from './pages/bienvenida/bienvenida';
 import { QuienSoy } from './pages/quien-soy/quien-soy';
 import { AuthGuard } from './guards/auth.guard-guard';
 import { NotFound } from './pages/not-found/not-found';
+import { Juegos } from './pages/juegos/juegos';
 
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'login',
+        redirectTo: 'bienvenida',
         pathMatch: 'full'
     },
     {
@@ -22,13 +23,16 @@ export const routes: Routes = [
     },
     {
         path: 'bienvenida',
-        component: Bienvenida,
-        canActivate: [AuthGuard]
+        component: Bienvenida
     },
     {
         path: 'quien-soy',
         component: QuienSoy,
         canActivate: [AuthGuard]
+    },
+    {
+        path: 'juegos',
+        component: Juegos
     },
     {
         path: '**',

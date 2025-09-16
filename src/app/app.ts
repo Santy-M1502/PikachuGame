@@ -19,7 +19,7 @@ export class App {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        const rutasInternas = ['/bienvenida', '/quien-soy'];
+        const rutasInternas = ['/bienvenida', '/quien-soy', '/juegos'];
         this.mostrarNavFooter = rutasInternas.includes(event.urlAfterRedirects);
       });
   }

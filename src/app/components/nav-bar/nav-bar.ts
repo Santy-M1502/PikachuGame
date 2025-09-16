@@ -2,18 +2,21 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { SupabaseService } from '../../services/superbase.service';
+import { AuthService } from '../../services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-nav-bar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './nav-bar.html',
   styleUrls: ['./nav-bar.css']
 })
 export class NavBar {
   constructor(
     private supabaseService: SupabaseService,
-    private router: Router
+    private router: Router,
+    public authService: AuthService
   ) {}
 
   async logout() {
@@ -24,7 +27,7 @@ export class NavBar {
     }
 
     localStorage.clear();
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
-
 }

@@ -52,7 +52,8 @@ export class Login {
 
     localStorage.setItem('user', JSON.stringify(data.user));
 
-    this.router.navigate(['/bienvenida']);
+    // this.router.navigate(['/bienvenida']);
+    window.location.href = '/bienvenida'
   }
 }
 

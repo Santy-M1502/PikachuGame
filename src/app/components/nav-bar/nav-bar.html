@@ -7,8 +7,16 @@
     <li><a routerLink="/experience">Experiencia</a></li>
     <li><a routerLink="/chat">Chat en vivo</a></li>
     <li><a routerLink="/quien-soy">Sobre Mi</a></li>
-    <li>
+
+    <li *ngIf="authService.isLoggedIn()">
       <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
+    </li>
+
+    <li *ngIf="!authService.isLoggedIn()">
+      <a routerLink="/login" class="login">Login</a>
+    </li>
+    <li *ngIf="!authService.isLoggedIn()">
+      <a routerLink="/register" class="register">Register</a>
     </li>
   </ul>
 </nav>

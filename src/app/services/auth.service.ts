@@ -1,30 +1,35 @@
 import { Injectable, signal } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  isLoggedIn = signal(false);
+  private _isLoggedIn = signal<boolean>(false);
 
   constructor() {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
-      this.isLoggedIn.set(!!token);
+      this._isLoggedIn.set(!!token);
     }
   }
+
+  // para usar en plantilla: authService.isLoggedIn()
+  readonly isLoggedIn = this._isLoggedIn;
 
   login(token: string) {
     if (typeof window !== 'undefined') {
       localStorage.setItem('token', token);
-      this.isLoggedIn.set(true);
+      this._isLoggedIn.set(true);
     }
   }
 
   logout() {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
-      this.isLoggedIn.set(false);
+      this._isLoggedIn.set(false);
     }
+  }
+
+  isAuthenticated(): boolean {
+    return this._isLoggedIn();
   }
 
   getToken(): string | null {

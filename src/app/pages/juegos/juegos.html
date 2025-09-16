@@ -1,0 +1,27 @@
+<div class="home-page">
+  <div class="section-container">
+    <button class="pokeball-card" (click)="goToJuego('/juego1')">
+      <img src="assets/juegos/juego1.jpg" alt="Juego 1" class="pk-img">
+      <div class="pk-title">Ahorcado</div>
+    </button>
+
+    <button class="pokeball-card" (click)="goToJuego('/juego2')">
+      <img src="assets/juegos/juego2.webp" alt="Juego 2" class="pk-img">
+      <div class="pk-title">Mayor o menor</div>
+    </button>
+
+    <button class="pokeball-card" (click)="goToJuego('/juego3')">
+      <img src="assets/juegos/juego3.jpeg" alt="Juego 3" class="pk-img">
+      <div class="pk-title">Preguntados</div>
+    </button>
+
+    <button class="pokeball-card" (click)="goToJuego('/juego4')">
+      <img src="assets/juegos/juego4.jpg" alt="Juego 4" class="pk-img">
+      <div class="pk-title">Quien es ese pokemon?</div>
+    </button>
+  </div>
+
+  <div class="login-message" *ngIf="showMessage()">
+    🔒 Debes iniciar sesión para jugar
+  </div>
+</div>
