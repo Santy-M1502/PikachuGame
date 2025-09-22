@@ -8,7 +8,7 @@ import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
-  imports: [  CommonModule, RouterModule, NavBar, Footer ],
+  imports: [  CommonModule, RouterModule, NavBar ],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
@@ -19,7 +19,7 @@ export class App {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        const rutasInternas = ['/bienvenida', '/quien-soy', '/juegos'];
+        const rutasInternas = ['/bienvenida', '/quien-soy', '/juegos', '/juego1', '/juego2', '/juego3', '/juego4'];
         this.mostrarNavFooter = rutasInternas.includes(event.urlAfterRedirects);
       });
   }

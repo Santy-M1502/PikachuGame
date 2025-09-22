@@ -1,3 +1,21 @@
-<button class="chat-button">
-    <img src="../../../assets/PikachuFace.png" alt="Chat Pikachu">
+<button class="chat-button" (click)="toggleChat()">
+  <img src="../../../assets/PikachuFace.png" alt="Chat Pikachu">
 </button>
+
+<div class="modal-chat" *ngIf="isOpen()">
+  <div class="chat-header">
+    <h2>Chat Global</h2>
+    <button class="close-chat" (click)="toggleChat()">&times;</button>
+  </div>
+
+  <div class="chat-body">
+    <div *ngFor="let msg of messages()">
+      <strong>{{ msg.nombre }} {{ msg.apellido }}:</strong> {{ msg.text }}
+    </div>
+  </div>
+
+  <div class="chat-footer">
+    <input [(ngModel)]="newMessage" placeholder="Escribe un mensaje...">
+    <button (click)="sendMessage()">Enviar</button>
+  </div>
+</div>

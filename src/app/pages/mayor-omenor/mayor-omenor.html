@@ -1,0 +1,38 @@
+
+<div class="container">
+
+  <div *ngIf="pantalla === 'inicio'" class="inicio">
+    <h1>Mayor o Menor</h1>
+    <p>Adivina si la siguiente carta será mayor o menor que la actual. ¡Acumula puntos y trata de no perder!</p>
+    <p>Si presionas mayor y la carta era J, Q, K, o si presionas menor y la carta era 1, 2, 3 ¡ganas 5 puntos!</p>
+    <button (click)="comenzarJuego()">Comenzar</button>
+  </div>
+
+  <div *ngIf="pantalla === 'juego'" class="game">
+    <div class="info">
+      <h2>¿La siguiente carta será mayor o menor?</h2>
+      <p>Tu carta: {{ cartaAleatoria.nombre }} ({{ cartaAleatoria.valor }})</p>
+      <p *ngIf="resultado()">{{ resultado() }}</p>
+      <p>Puntos: {{ puntos() }}</p>
+    </div>
+    <div class="game-area">
+      <div class="card-container">
+        <img src="{{ cartaAleatoria.imagen }}" alt="{{ cartaAleatoria.nombre }}">
+      </div>
+      <div class="buttons">
+        <button (click)="compararCartas('mayor')">Mayor</button>
+        <button (click)="compararCartas('menor')">Menor</button>
+      </div>
+      <div class="mazo">
+        <img src="assets/cartasNaipes/ParteAtras.png" alt="Mazo">
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="pantalla === 'fin'" class="fin">
+    <h1>¡Perdiste!</h1>
+    <p>Tu puntaje final: {{ puntos() }}</p>
+    <button (click)="comenzarJuego()">Volver a jugar</button>
+  </div>
+
+</div>

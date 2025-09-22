@@ -30,7 +30,6 @@ export class Register {
     private router: Router
   ) {}
 
-  // Validaciones
   isEmailValid(email: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
@@ -55,13 +54,11 @@ async register() {
   this.showErrors.set(true);
   this.errorMessage.set('');
 
-  // Campos obligatorios
   if (!this.email() || !this.confirmEmail() || !this.nombre() || !this.apellido() || !this.edad() || !this.password() || !this.confirmPassword()) {
     this.errorMessage.set('Todos los campos son obligatorios');
     return;
   }
 
-  // Validaciones individuales
   if (!this.isEmailValid(this.email())) {
     this.errorMessage.set('El email no es válido');
     return;
@@ -97,7 +94,6 @@ async register() {
     return;
   }
 
-  // Registro en Auth
   const { data, error } = await this.supabaseService.signUp(
     this.email(),
     this.password()
@@ -107,18 +103,26 @@ async register() {
     return;
   }
 
-  const { error: profileError } = await this.supabaseService.insertProfile({
-    id: data.user.id,
-    nombre: this.nombre(),
-    apellido: this.apellido(),
-    edad: this.edad()!
-  });
+  try {
+    const { error: profileError } = await this.supabaseService.insertProfile({
+      id: data.user.id,
+      nombre: this.nombre(),
+      apellido: this.apellido(),
+      edad: this.edad()!
+    });
 
-
-  if (profileError) {
-    this.errorMessage.set(profileError.message);
-  } else {
+    if (profileError) {
+      // Delete the user if profile creation fails
+      await this.supabaseService.client.auth.admin.deleteUser(data.user.id);
+      this.errorMessage.set(profileError.message);
+      return;
+    }
+    
     this.showSuccessModal.set(true);
+  } catch (error: any) {
+    // Delete the user if profile creation fails
+    await this.supabaseService.client.auth.admin.deleteUser(data.user.id);
+    this.errorMessage.set(error.message || 'Error al crear el perfil');
   }
 }
   goToLogin() {

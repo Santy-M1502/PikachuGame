@@ -11,7 +11,6 @@ export class AuthService {
     }
   }
 
-  // para usar en plantilla: authService.isLoggedIn()
   readonly isLoggedIn = this._isLoggedIn;
 
   login(token: string) {

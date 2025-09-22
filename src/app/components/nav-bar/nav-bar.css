@@ -2,13 +2,19 @@
 .navbar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   background-color: #ffcb05;
   padding: 10px 20px;
   position: sticky;
   top: 0;
   z-index: 5000;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.title-menu {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .navbar-brand h1 {
@@ -87,15 +93,25 @@
 
 /* mobile */
 @media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+  }
+  
   .menu-toggle {
     display: block;
     color: #4F200D;
+    padding: 5px 10px;
   }
 
   .navbar-links {
     display: none;
     flex-direction: column;
     width: 100%;
+    padding: 10px 0;
+    background-color: #ffcb05;
+    position: absolute;
+    top: 100%;
+    left: 0;
   }
 
   .navbar-links.active {

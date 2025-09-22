@@ -6,6 +6,8 @@ import { QuienSoy } from './pages/quien-soy/quien-soy';
 import { AuthGuard } from './guards/auth.guard-guard';
 import { NotFound } from './pages/not-found/not-found';
 import { Juegos } from './pages/juegos/juegos';
+import { MayorOmenor } from './pages/mayor-omenor/mayor-omenor';
+import { Ahorcado } from './pages/ahorcado/ahorcado';
 
 export const routes: Routes = [
     {
@@ -33,6 +35,16 @@ export const routes: Routes = [
     {
         path: 'juegos',
         component: Juegos
+    },
+    {
+        path: 'juego1',
+        component: Ahorcado,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'juego2',
+        component: MayorOmenor,
+        canActivate: [AuthGuard]
     },
     {
         path: '**',

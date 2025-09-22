@@ -6,7 +6,7 @@ import { ChatButton } from '../../components/chat-button/chat-button';
 @Component({
   selector: 'app-quien-soy',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, ChatButton],
+  imports: [CommonModule, ChatButton, HttpClientModule],
   templateUrl: './quien-soy.html',
   styleUrls: ['./quien-soy.css']
 })
