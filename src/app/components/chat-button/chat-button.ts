@@ -1,5 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal, ViewChild, ElementRef, AfterViewInit, effect } from '@angular/core';
 import { ChatService, Message } from '../../services/chat.service';
+import { SupabaseService } from '../../services/superbase.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -9,47 +10,91 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./chat-button.css'],
   imports: [FormsModule, CommonModule]
 })
-export class ChatButton implements OnInit {
-  isOpen = signal(false);
-  messages = signal<Message[]>([]);
-  newMessage = signal('');
+export class ChatButton implements AfterViewInit {
+  @ViewChild('body', { static: false }) body!: ElementRef<HTMLElement>;
 
-  userId = 1; // tu usuario actual
+  newMessageSignal = signal('');
+  open = false;
+  currentUsuarioId: number | null = null;
+  userId = signal<string | null>(null);
 
-  constructor(private chatService: ChatService) {}
+  constructor(public chatService: ChatService, private supabaseService: SupabaseService) {
+    this.loadUser();
 
-  async ngOnInit() {
-    // Suscribirse a nuevos mensajes
-    this.chatService.onNewMessage(msg => {
-      this.messages.update(msgs => [...msgs, msg]);
-      this.scrollToBottom();
+    effect(() => {
+      this.chatService.messages(); 
+      if (this.open) setTimeout(() => this.scrollToBottom(), 60);
     });
   }
 
-  async toggleChat() {
-    this.isOpen.set(!this.isOpen());
+  get newMessage() {
+    return this.newMessageSignal();
+  }
+  set newMessage(value: string) {
+    this.newMessageSignal.set(value);
+  }
 
-    if (this.isOpen()) {
-      // Traer mensajes al abrir
-      const msgs = await this.chatService.getMessages();
-      this.messages.set(msgs);
-      this.scrollToBottom();
+  ngAfterViewInit(): void {
+    setTimeout(() => this.scrollToBottom(), 60);
+  }
+
+  async loadUser() {
+    const session = await this.supabaseService.client.auth.getSession();
+    const userId = session.data.session?.user.id ?? null;
+    this.userId.set(userId);
+
+    if (userId) {
+      const { data: usuarioData } = await this.supabaseService.client
+        .from('usuarios')
+        .select('id')
+        .eq('auth_id', userId)
+        .single();
+      this.currentUsuarioId = usuarioData?.id ?? null;
     }
   }
 
-  async sendMessage() {
-    if (!this.newMessage()) return;
-
-    const sent = await this.chatService.sendMessage(this.userId, this.newMessage());
-    this.messages.update(msgs => [...msgs, ...sent]);
-    this.newMessage.set('');
-    this.scrollToBottom();
+  toggle() { 
+    this.open = !this.open; 
+    if (this.open) setTimeout(() => this.scrollToBottom(), 80); 
   }
 
-  scrollToBottom() {
-    setTimeout(() => {
-      const chatBody = document.querySelector('.chat-body');
-      if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
-    }, 50);
+  async send() {
+    const text = this.newMessage.trim();
+    if (!text) return;
+
+    const session = await this.supabaseService.client.auth.getSession();
+    const userId = session.data.session?.user.id ?? null;
+
+    const { data: usuarioData } = await this.supabaseService.client
+      .from('usuarios')
+      .select('id')
+      .eq('auth_id', userId)
+      .single();
+
+    const usuarioId = usuarioData?.id ?? null;
+
+    await this.chatService.sendMessage(text, userId, usuarioId);
+
+    this.newMessage = '';
+    setTimeout(() => this.scrollToBottom(), 80);
   }
+
+  close() { 
+    this.open = false; 
+  }
+
+  private scrollToBottom() {
+    try {
+      const el = this.body?.nativeElement;
+      if (!el) return;
+      el.scrollTop = el.scrollHeight;
+    } catch (e) {
+      console.error('Error al scrollear:', e);
+    }
+  }
+
+  getMessages(): Message[] {
+    return this.chatService.messages();
+  }
+
 }

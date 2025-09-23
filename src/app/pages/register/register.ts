@@ -50,89 +50,105 @@ export class Register {
     return a === b;
   }
 
-async register() {
-  this.showErrors.set(true);
-  this.errorMessage.set('');
+  async register() {
+    this.showErrors.set(true);
+    this.errorMessage.set('');
 
-  if (!this.email() || !this.confirmEmail() || !this.nombre() || !this.apellido() || !this.edad() || !this.password() || !this.confirmPassword()) {
-    this.errorMessage.set('Todos los campos son obligatorios');
-    return;
-  }
-
-  if (!this.isEmailValid(this.email())) {
-    this.errorMessage.set('El email no es válido');
-    return;
-  }
-
-  if (!this.areEqual(this.email(), this.confirmEmail())) {
-    this.errorMessage.set('Los emails no coinciden');
-    return;
-  }
-
-  if (!this.isPasswordValid(this.password())) {
-    this.errorMessage.set('La contraseña debe tener al menos 6 caracteres');
-    return;
-  }
-
-  if (!this.areEqual(this.password(), this.confirmPassword())) {
-    this.errorMessage.set('Las contraseñas no coinciden');
-    return;
-  }
-
-  if (!this.isNameValid(this.nombre())) {
-    this.errorMessage.set('El nombre debe tener al menos 2 caracteres');
-    return;
-  }
-
-  if (!this.isNameValid(this.apellido())) {
-    this.errorMessage.set('El apellido debe tener al menos 2 caracteres');
-    return;
-  }
-
-  if (!this.isAgeValid(this.edad())) {
-    this.errorMessage.set('La edad debe ser un número entre 1 y 119');
-    return;
-  }
-
-  const { data, error } = await this.supabaseService.signUp(
-    this.email(),
-    this.password()
-  );
-  if (error || !data.user) {
-    this.errorMessage.set(error?.message ?? 'No se pudo crear el usuario.');
-    return;
-  }
-
-  try {
-    const { error: profileError } = await this.supabaseService.insertProfile({
-      id: data.user.id,
-      nombre: this.nombre(),
-      apellido: this.apellido(),
-      edad: this.edad()!
-    });
-
-    if (profileError) {
-      // Delete the user if profile creation fails
-      await this.supabaseService.client.auth.admin.deleteUser(data.user.id);
-      this.errorMessage.set(profileError.message);
+    if (!this.email() || !this.confirmEmail() || !this.nombre() || !this.apellido() || !this.edad() || !this.password() || !this.confirmPassword()) {
+      this.errorMessage.set('Todos los campos son obligatorios');
       return;
     }
-    
-    this.showSuccessModal.set(true);
-  } catch (error: any) {
-    // Delete the user if profile creation fails
-    await this.supabaseService.client.auth.admin.deleteUser(data.user.id);
-    this.errorMessage.set(error.message || 'Error al crear el perfil');
+
+    if (!this.isEmailValid(this.email())) {
+      this.errorMessage.set('El email no es válido');
+      return;
+    }
+
+    if (!this.areEqual(this.email(), this.confirmEmail())) {
+      this.errorMessage.set('Los emails no coinciden');
+      return;
+    }
+
+    if (!this.isPasswordValid(this.password())) {
+      this.errorMessage.set('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    if (!this.areEqual(this.password(), this.confirmPassword())) {
+      this.errorMessage.set('Las contraseñas no coinciden');
+      return;
+    }
+
+    if (!this.isNameValid(this.nombre())) {
+      this.errorMessage.set('El nombre debe tener al menos 2 caracteres');
+      return;
+    }
+
+    if (!this.isNameValid(this.apellido())) {
+      this.errorMessage.set('El apellido debe tener al menos 2 caracteres');
+      return;
+    }
+
+    if (!this.isAgeValid(this.edad())) {
+      this.errorMessage.set('La edad debe ser un número entre 1 y 119');
+      return;
+    }
+
+    // Intento de signup
+    const { data, error } = await this.supabaseService.signUp(
+      this.email(),
+      this.password()
+    );
+
+    // Manejo error de cuenta existente
+    if (error || !data.user) {
+      const msg = error?.message ?? 'No se pudo crear el usuario.';
+
+      // Si indica que ya existe, abrimos modal con opción a ir a login
+      if (/already|exists|duplicate|unique|registered/i.test(msg)) {
+        this.modalMessage.set('Ya existe una cuenta con ese email. ¿Querés ir al inicio de sesión?');
+        this.showModal.set(true);
+        return;
+      }
+
+      this.errorMessage.set(msg);
+      return;
+    }
+
+    const authId = data.user.id; // UUID generado por Supabase Auth
+
+    try {
+      const { data: profileData, error: profileError } = await this.supabaseService.insertProfile({
+        auth_id: authId,
+        nombre: this.nombre(),
+        apellido: this.apellido(),
+        email: this.email(),
+        edad: this.edad()!
+      });
+
+      if (profileError) {
+        // Hacemos logout y mostramos error
+        await this.supabaseService.client.auth.signOut();
+        this.errorMessage.set(profileError.message || 'Error al crear el perfil. Contactá al administrador.');
+        return;
+      }
+
+      // Registro exitoso
+      this.showSuccessModal.set(true);
+    } catch (err: any) {
+      await this.supabaseService.client.auth.signOut();
+      this.errorMessage.set(err?.message || 'Error al crear el perfil');
+    }
   }
-}
-  goToLogin() {
+
+  async goToLogin() {
+    try { await this.supabaseService.client.auth.signOut(); } catch(e) { /* ignore */ }
     this.showSuccessModal.set(false);
+    this.showModal.set(false);
     this.router.navigate(['/login']);
   }
 
   closeModal() {
     this.showModal.set(false);
   }
-
-  
 }

@@ -77,3 +77,38 @@
     </div>
   </div>
 </div>
+<!-- Backdrop común para modal -->
+<div class="modal-backdrop" *ngIf="showModal() || showSuccessModal()" (click)="closeModal()"></div>
+
+<!-- Modal: usuario ya registrado / aviso -->
+<div class="modal-card" *ngIf="showModal()" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <header class="modal-header">
+    <h3 id="modal-title">Cuenta existente</h3>
+  </header>
+
+  <div class="modal-body">
+    <p>{{ modalMessage() || 'Parece que ya existe una cuenta con ese email.' }}</p>
+  </div>
+
+  <footer class="modal-footer">
+    <button class="btn btn-outline" (click)="closeModal()">Cerrar</button>
+    <button class="btn btn-primary" (click)="goToLogin()">Ir a Login</button>
+  </footer>
+</div>
+
+<!-- Modal: registro exitoso -->
+<div class="modal-card" *ngIf="showSuccessModal()" role="dialog" aria-modal="true" aria-labelledby="success-title">
+  <header class="modal-header success">
+    <h3 id="success-title">Registro exitoso</h3>
+  </header>
+
+  <div class="modal-body">
+    <p>Tu cuenta se creó correctamente. ¿Querés ir al inicio de sesión ahora?</p>
+  </div>
+
+  <footer class="modal-footer">
+    <button class="btn btn-outline" (click)="showSuccessModal.set(false)">Quedar aquí</button>
+    <button class="btn btn-primary" (click)="goToLogin()">Ir a Login</button>
+  </footer>
+</div>
+

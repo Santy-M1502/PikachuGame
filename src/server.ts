@@ -1,36 +1,68 @@
+import {
+  AngularNodeAppEngine,
+  createNodeRequestHandler,
+  isMainModule,
+  writeResponseToNodeResponse,
+} from '@angular/ssr/node';
 import express from 'express';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import { Pool } from 'pg';
+import { join } from 'node:path';
+
+const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
-app.use(cors());
-app.use(bodyParser.json());
+const angularApp = new AngularNodeAppEngine();
 
-const pool = new Pool({
-  host: 'localhost',
-  user: 'tu_usuario',    // reemplazar con tu user de PostgreSQL
-  password: 'tu_pass',   // reemplazar con tu pass
-  database: 'tu_db',     // reemplazar con tu base de datos
-  port: 5432
+/**
+ * Example Express Rest API endpoints can be defined here.
+ * Uncomment and define endpoints as necessary.
+ *
+ * Example:
+ * ```ts
+ * app.get('/api/{*splat}', (req, res) => {
+ *   // Handle API request
+ * });
+ * ```
+ */
+
+/**
+ * Serve static files from /browser
+ */
+app.use(
+  express.static(browserDistFolder, {
+    maxAge: '1y',
+    index: false,
+    redirect: false,
+  }),
+);
+
+/**
+ * Handle all other requests by rendering the Angular application.
+ */
+app.use((req, res, next) => {
+  angularApp
+    .handle(req)
+    .then((response) =>
+      response ? writeResponseToNodeResponse(response, res) : next(),
+    )
+    .catch(next);
 });
 
+/**
+ * Start the server if this module is the main entry point.
+ * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
+ */
+if (isMainModule(import.meta.url)) {
+  const port = process.env['PORT'] || 4000;
+  app.listen(port, (error) => {
+    if (error) {
+      throw error;
+    }
 
-app.get('/messages', async (req, res) => {
-  const result = await pool.query(`
-    SELECT m.id, m.text, m.created_at, u.nombre, u.apellido
-    FROM messages m
-    JOIN usuarios u ON m.user_id = u.id
-    ORDER BY m.created_at ASC
-    LIMIT 50
-  `);
-  res.json(result.rows);
-});
+    console.log(`Node Express server listening on http://localhost:${port}`);
+  });
+}
 
-app.post('/messages', async (req, res) => {
-  const { user_id, text } = req.body;
-  await pool.query('INSERT INTO messages (user_id, text) VALUES ($1, $2)', [user_id, text]);
-  res.json({ ok: true });
-});
-
-app.listen(3000, () => console.log('Backend corriendo en http://localhost:3000'));
+/**
+ * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
+ */
+export const reqHandler = createNodeRequestHandler(app);

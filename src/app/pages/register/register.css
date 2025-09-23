@@ -123,3 +123,91 @@ input:focus {
 .signup-text a:hover {
   text-decoration: underline;
 }
+
+/* Backdrop */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 2200;
+}
+
+/* Modal card base */
+.modal-card {
+  position: fixed;
+  right: 50%;
+  top: 50%;
+  transform: translate(50%, -50%);
+  width: 92%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.32);
+  z-index: 2300;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Header */
+.modal-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  background: linear-gradient(180deg,#ffffff,#fffefe);
+}
+.modal-header.success {
+  background: linear-gradient(180deg,#4F200D,#4F200D);
+  color: #FFD93D;
+}
+.modal-header h3 { margin: 0; font-size: 16px; }
+
+/* Body */
+.modal-body {
+  padding: 16px;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Footer / acciones */
+.modal-footer {
+  padding: 12px 14px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  border-top: 1px solid rgba(0,0,0,0.04);
+  background: #fff;
+}
+
+/* Botones (paleta: #4F200D, #FFD93D, #e63946) */
+.btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  min-width: 88px;
+}
+
+.btn-primary {
+  background: #4F200D; /* oscuro */
+  color: #FFD93D; /* amarillo */
+  border: 2px solid rgba(0,0,0,0.04);
+}
+.btn-primary:active { transform: translateY(1px); }
+
+.btn-outline {
+  background: transparent;
+  color: #4F200D;
+  border: 1px solid #e6ded9;
+}
+
+/* ajustar en pantallas muy chicas */
+@media (max-width: 420px) {
+  .modal-card {
+    right: 50%;
+    transform: translate(50%, -50%);
+    width: 94%;
+  }
+}

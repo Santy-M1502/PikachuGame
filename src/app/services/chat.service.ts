@@ -1,77 +1,108 @@
-import { Injectable, signal } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+// src/app/services/chat.service.ts
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { supabase } from '../../supabase.config';
+
+export interface Usuario {
+  id: number;
+  auth_id: string;
+  nombre: string;
+  apellido: string;
+  email?: string | null;
+}
 
 export interface Message {
   id: number;
-  user_id: number;
-  nombre: string;
-  apellido: string;
   text: string;
-  created_at: string;
+  created_at: string | null;
+  user_id: string | null;
+  usuario_id: number | null;
+  usuario?: Usuario | null;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class ChatService {
-  private supabase: SupabaseClient;
+  messages: WritableSignal<Message[]> = signal<Message[]>([]);
 
   constructor() {
-    this.supabase = createClient(supabase.supabaseUrl, supabase.supabaseKey);
+    this.fetchMessages();
   }
 
-  async getMessages(): Promise<Message[]> {
-    const { data, error } = await this.supabase
+  private normalizeRowToMessage(row: any): Message {
+    // Supabase devuelve `usuario` como array (relación). Tomamos el primer elemento si existe.
+    const rawUsuario = row?.usuario;
+    let usuario: Usuario | null = null;
+
+    if (Array.isArray(rawUsuario) && rawUsuario.length > 0) {
+      const u = rawUsuario[0];
+      usuario = {
+        id: u.id,
+        auth_id: u.auth_id ?? '', // si no viene, dejamos string vacío (o null si preferís cambiar el tipo)
+        nombre: u.nombre,
+        apellido: u.apellido,
+        email: u.email ?? null,
+      };
+    } else if (rawUsuario && !Array.isArray(rawUsuario)) {
+      // por si la respuesta viene ya como objeto (precaución)
+      usuario = {
+        id: rawUsuario.id,
+        auth_id: rawUsuario.auth_id ?? '',
+        nombre: rawUsuario.nombre,
+        apellido: rawUsuario.apellido,
+        email: rawUsuario.email ?? null,
+      };
+    }
+
+    return {
+      id: row.id,
+      text: row.text,
+      created_at: row.created_at ?? null,
+      user_id: row.user_id ?? null,
+      usuario_id: row.usuario_id ?? null,
+      usuario,
+    };
+  }
+
+  // Traer mensajes con usuario relacionado (pedimos auth_id también)
+  async fetchMessages() {
+    const { data, error } = await supabase
       .from('messages')
-      .select('id, user_id, text, created_at, usuarios(nombre, apellido)')
+      .select(
+        `id, text, created_at, user_id, usuario_id, usuario:usuarios(id, auth_id, nombre, apellido, email)`
+      )
       .order('created_at', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error fetching messages:', error);
+      return;
+    }
 
-    return (data || []).map(d => ({
-      id: (d as any)['id'],
-      user_id: (d as any)['user_id'],
-      text: (d as any)['text'],
-      created_at: (d as any)['created_at'],
-      nombre: ((d as any)['usuarios']?.[0]?.nombre) || 'Desconocido',
-      apellido: ((d as any)['usuarios']?.[0]?.apellido) || ''
-    }));
+    const rows = (data ?? []) as any[];
+    const messages = rows.map((r) => this.normalizeRowToMessage(r));
+    this.messages.set(messages);
   }
 
-  async sendMessage(userId: number, text: string) {
-    const { data, error } = await this.supabase
+  // Enviar un mensaje
+  async sendMessage(text: string, user_id: string | null = null, usuario_id: number | null = null) {
+    if (!text || !text.trim()) return;
+
+    const { data, error } = await supabase
       .from('messages')
-      .insert([{ user_id: userId, text }]);
+      .insert([{ text, user_id, usuario_id }])
+      .select(
+        `id, text, created_at, user_id, usuario_id, usuario:usuarios(id, auth_id, nombre, apellido, email)`
+      );
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error sending message:', error);
+      return;
+    }
 
-    return (data || []).map(d => ({
-      id: (d as any)['id'],
-      user_id: (d as any)['user_id'],
-      text: (d as any)['text'],
-      created_at: (d as any)['created_at'],
-      nombre: 'TuNombre',
-      apellido: 'TuApellido'
-    }));
-  }
-
-  onNewMessage(callback: (msg: Message) => void) {
-    this.supabase
-      .channel('public:messages')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'messages' },
-        payload => {
-          const p = payload.new as any;
-          callback({
-            id: p['id'],
-            user_id: p['user_id'],
-            text: p['text'],
-            created_at: p['created_at'],
-            nombre: p['usuarios']?.[0]?.nombre || 'Desconocido',
-            apellido: p['usuarios']?.[0]?.apellido || ''
-          });
-        }
-      )
-      .subscribe();
+    const rows = (data ?? []) as any[];
+    if (rows.length > 0) {
+      const insertedMessage = this.normalizeRowToMessage(rows[0]);
+      this.messages.update((msgs: Message[]) => [...msgs, insertedMessage]);
+    }
   }
 }

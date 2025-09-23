@@ -1,21 +1,30 @@
-<button class="chat-button" (click)="toggleChat()">
-  <img src="../../../assets/PikachuFace.png" alt="Chat Pikachu">
+<button class="fab" (click)="toggle()" aria-label="Abrir chat" title="Abrir chat">
+  <img src="/assets/PikachuFace.png" alt="Pikachu" />
 </button>
 
-<div class="modal-chat" *ngIf="isOpen()">
-  <div class="chat-header">
-    <h2>Chat Global</h2>
-    <button class="close-chat" (click)="toggleChat()">&times;</button>
-  </div>
+<div class="chat-window" [class.open]="open">
+  <header class="chat-header">
+    <div class="chat-title">Chat</div>
+    <button class="close-btn" (click)="close()">✕</button>
+  </header>
 
-  <div class="chat-body">
-    <div *ngFor="let msg of messages()">
-      <strong>{{ msg.nombre }} {{ msg.apellido }}:</strong> {{ msg.text }}
+  <section class="chat-body" #body>
+    <div *ngIf="getMessages().length === 0" class="empty">
+      Bienvenido — escribe abajo para empezar
     </div>
-  </div>
+    <div *ngFor="let msg of chatService.messages()" 
+         [ngClass]="{ 'mio': msg.user_id === userId(), 'otro': msg.user_id !== userId() }">
+      <div class="meta">
+        <span class="name">{{ msg.usuario ? (msg.usuario.nombre + ' ' + msg.usuario.apellido) : 'Anon' }}</span>
+        <span class="time" *ngIf="msg.created_at">{{ msg.created_at | date: 'shortTime' }}</span>
+      </div>
+      <div class="bubble">{{ msg.text }}</div>
+    </div>
+  </section>
 
-  <div class="chat-footer">
-    <input [(ngModel)]="newMessage" placeholder="Escribe un mensaje...">
-    <button (click)="sendMessage()">Enviar</button>
-  </div>
+    <footer class="chat-footer">
+      <input class="chat-input" type="text" placeholder="Escribe un mensaje..."
+            [(ngModel)]="newMessage" (keyup.enter)="send()" />
+      <button class="btn-send" (click)="send()">Enviar</button>
+    </footer>
 </div>

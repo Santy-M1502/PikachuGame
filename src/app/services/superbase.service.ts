@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { supabase } from '../../supabase.config';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import { supabase } from '../../supabase.config'; // <-- aquí importas el cliente ya creado
 
 @Injectable({
   providedIn: 'root'
@@ -9,13 +9,8 @@ export class SupabaseService {
   private supabase: SupabaseClient;
 
   constructor() {
-    this.supabase = createClient(supabase.supabaseUrl, supabase.supabaseKey, {
-      auth: {
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: true
-      }
-    });
+    // no crear otro cliente; reutilizamos el que exportó supabase.config
+    this.supabase = supabase;
   }
 
   signIn(email: string, password: string) {
@@ -28,33 +23,37 @@ export class SupabaseService {
 
   private async checkTableExists(tableName: string): Promise<boolean> {
     try {
-      const { data, error } = await this.supabase
+      const { error } = await this.supabase
         .from(tableName)
-        .select('*')
+        .select('*', { count: 'exact', head: true }) // más eficiente para solo chequear existencia
         .limit(1);
-      
+
+      // si hay error en la consulta, asumimos que no existe o no hay permisos
       return !error;
     } catch {
       return false;
     }
   }
 
-  async insertProfile(profile: { id: string; nombre: string; apellido: string; edad: number }) {
+  // dentro de SupabaseService
+  async insertProfile(profile: { auth_id: string; nombre: string; apellido: string; edad: number; email: string }) {
     try {
-      const tableExists = await this.checkTableExists('profiles');
+      const tableExists = await this.checkTableExists('usuarios'); // <- tabla real
       if (!tableExists) {
-        throw new Error('La tabla de perfiles no existe en la base de datos. Por favor, contacte al administrador.');
+        throw new Error('La tabla "usuarios" no existe en la base de datos. Por favor, contacte al administrador.');
       }
 
-      const session = await this.supabase.auth.getSession();
-      if (!session.data.session) {
-        throw new Error('No hay sesión activa');
-      }
-
+      // Insertamos en la tabla "usuarios" usando auth_id (UUID)
       const { data, error } = await this.supabase
-        .from('profiles')
-        .insert([profile])
-        .select();
+        .from('usuarios')
+        .insert([{
+          auth_id: profile.auth_id,
+          nombre: profile.nombre,
+          apellido: profile.apellido,
+          email: profile.email,
+          edad: profile.edad
+        }])
+        .select('id, auth_id, nombre, apellido, email');
 
       if (error) {
         console.error('Error inserting profile:', error);
