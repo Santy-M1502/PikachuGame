@@ -1,4 +1,3 @@
-// src/app/services/chat.service.ts
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { supabase } from '../../supabase.config';
 
@@ -24,6 +23,10 @@ export interface Message {
 })
 export class ChatService {
   messages: WritableSignal<Message[]> = signal<Message[]>([]);
+
+  // canal único y callbacks de notificación
+  private channel: any = null;
+  private onNewMessageCallbacks: Array<(m: Message) => void> = [];
 
   constructor() {
     this.fetchMessages();
@@ -100,35 +103,99 @@ export class ChatService {
       return;
     }
 
+    // Para UX, podemos añadirlo inmediatamente, pero chequeamos duplicados por id.
     const rows = (data ?? []) as any[];
     if (rows.length > 0) {
       const insertedMessage = this.normalizeRowToMessage(rows[0]);
-      this.messages.update((msgs: Message[]) => [...msgs, insertedMessage]);
+      this.messages.update((msgs: Message[]) =>
+        msgs.some((m) => m.id === insertedMessage.id) ? msgs : [...msgs, insertedMessage]
+      );
     }
   }
 
-  private subscribeToMessages() {
-    supabase
-      .channel('messages-channel')
-      // Nuevo mensaje
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'messages' },
-        (payload) => {
-          const normalized = this.normalizeRowToMessage(payload.new);
-          this.messages.update((msgs) => [...msgs, normalized]);
-        }
-      )
-      // Mensaje editado
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'messages' },
-        (payload) => {
-          const updated = this.normalizeRowToMessage(payload.new);
-          this.messages.update((msgs) =>
-            msgs.map((m) => (m.id === updated.id ? updated : m))
-          );
-        }
-      )
+    subscribeToMessages() {
+      if (this.channel) return;
+
+      this.channel = supabase
+        .channel('messages-channel')
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'messages' },
+          // handler async: re-fetch la fila completa (con usuario) para poder normalizar correctamente
+          async (payload: any) => {
+            try {
+              const id = (payload.new as any)['id']; // evita TS4111
+              if (!id) return;
+
+              const { data, error } = await supabase
+                .from('messages')
+                .select(
+                  `id, text, created_at, user_id, usuario_id, usuario:usuarios(id, auth_id, nombre, apellido, email)`
+                )
+                .eq('id', id)
+                .single();
+
+              if (error) {
+                console.error('Error fetching inserted message (realtime):', error);
+                return;
+              }
+
+              const normalized = this.normalizeRowToMessage(data);
+
+              // dedupe por id
+              this.messages.update((msgs) =>
+                msgs.some((m) => m.id === normalized.id) ? msgs : [...msgs, normalized]
+              );
+
+              // notificar callbacks (ej: componente para scrollear)
+              this.onNewMessageCallbacks.forEach((cb) => {
+                try { cb(normalized); } catch (e) { console.error('onNewMessage callback falló:', e); }
+              });
+            } catch (e) {
+              console.error('Handler INSERT realtime fallo:', e);
+            }
+          }
+        )
+        .on(
+          'postgres_changes',
+          { event: 'UPDATE', schema: 'public', table: 'messages' },
+          async (payload: any) => {
+            try {
+              const id = (payload.new as any)['id'];
+              if (!id) return;
+
+              const { data, error } = await supabase
+                .from('messages')
+                .select(
+                  `id, text, created_at, user_id, usuario_id, usuario:usuarios(id, auth_id, nombre, apellido, email)`
+                )
+                .eq('id', id)
+                .single();
+
+              if (error) {
+                console.error('Error fetching updated message (realtime):', error);
+                return;
+              }
+
+              const updated = this.normalizeRowToMessage(data);
+              this.messages.update((msgs) => msgs.map((m) => (m.id === updated.id ? updated : m)));
+            } catch (e) {
+              console.error('Handler UPDATE realtime fallo:', e);
+            }
+          }
+        )
+        .subscribe();
+    }
+
+
+  /**
+   * Registra un callback que se ejecuta cuando llega un nuevo mensaje.
+   * Devuelve una función de cancelación para removerlo.
+   */
+  registerOnNewMessage(cb: (m: Message) => void): () => void {
+    this.onNewMessageCallbacks.push(cb);
+    return () => {
+      this.onNewMessageCallbacks = this.onNewMessageCallbacks.filter((c) => c !== cb);
+    };
   }
 }
