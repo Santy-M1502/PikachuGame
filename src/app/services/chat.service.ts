@@ -27,10 +27,10 @@ export class ChatService {
 
   constructor() {
     this.fetchMessages();
+    this.subscribeToMessages();
   }
 
   private normalizeRowToMessage(row: any): Message {
-    // Supabase devuelve `usuario` como array (relación). Tomamos el primer elemento si existe.
     const rawUsuario = row?.usuario;
     let usuario: Usuario | null = null;
 
@@ -38,13 +38,12 @@ export class ChatService {
       const u = rawUsuario[0];
       usuario = {
         id: u.id,
-        auth_id: u.auth_id ?? '', // si no viene, dejamos string vacío (o null si preferís cambiar el tipo)
+        auth_id: u.auth_id ?? '',
         nombre: u.nombre,
         apellido: u.apellido,
         email: u.email ?? null,
       };
     } else if (rawUsuario && !Array.isArray(rawUsuario)) {
-      // por si la respuesta viene ya como objeto (precaución)
       usuario = {
         id: rawUsuario.id,
         auth_id: rawUsuario.auth_id ?? '',
@@ -64,7 +63,6 @@ export class ChatService {
     };
   }
 
-  // Traer mensajes con usuario relacionado (pedimos auth_id también)
   async fetchMessages() {
     const { data, error } = await supabase
       .from('messages')
@@ -83,8 +81,11 @@ export class ChatService {
     this.messages.set(messages);
   }
 
-  // Enviar un mensaje
-  async sendMessage(text: string, user_id: string | null = null, usuario_id: number | null = null) {
+  async sendMessage(
+    text: string,
+    user_id: string | null = null,
+    usuario_id: number | null = null
+  ) {
     if (!text || !text.trim()) return;
 
     const { data, error } = await supabase
@@ -104,5 +105,30 @@ export class ChatService {
       const insertedMessage = this.normalizeRowToMessage(rows[0]);
       this.messages.update((msgs: Message[]) => [...msgs, insertedMessage]);
     }
+  }
+
+  private subscribeToMessages() {
+    supabase
+      .channel('messages-channel')
+      // Nuevo mensaje
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'messages' },
+        (payload) => {
+          const normalized = this.normalizeRowToMessage(payload.new);
+          this.messages.update((msgs) => [...msgs, normalized]);
+        }
+      )
+      // Mensaje editado
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'messages' },
+        (payload) => {
+          const updated = this.normalizeRowToMessage(payload.new);
+          this.messages.update((msgs) =>
+            msgs.map((m) => (m.id === updated.id ? updated : m))
+          );
+        }
+      )
   }
 }
