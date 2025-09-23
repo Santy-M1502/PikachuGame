@@ -51,7 +51,6 @@
   opacity: 1;
 }
 
-/* Header */
 .chat-header {
   display: flex;
   justify-content: space-between;
@@ -71,7 +70,6 @@
   cursor: pointer;
 }
 
-/* Body */
 .chat-body {
   flex: 1;
   overflow-y: auto;
@@ -85,7 +83,6 @@
   font-size: 0.95rem;
 }
 
-/* Mensajes */
 .mio {
   align-self: flex-end;
   background-color: #e63946;
@@ -106,7 +103,6 @@
   word-wrap: break-word;
 }
 
-/* Meta */
 .meta {
   font-size: 0.7rem;
   margin-bottom: 3px;
@@ -117,7 +113,6 @@
   font-size: 0.9rem;
 }
 
-/* Footer */
 .chat-footer {
   display: flex;
   padding: 0.5rem;

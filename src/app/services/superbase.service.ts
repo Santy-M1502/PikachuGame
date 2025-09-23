@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { supabase } from '../../supabase.config'; // <-- aquí importas el cliente ya creado
+import { supabase } from '../../supabase.config';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,6 @@ export class SupabaseService {
   private supabase: SupabaseClient;
 
   constructor() {
-    // no crear otro cliente; reutilizamos el que exportó supabase.config
     this.supabase = supabase;
   }
 
@@ -25,25 +24,22 @@ export class SupabaseService {
     try {
       const { error } = await this.supabase
         .from(tableName)
-        .select('*', { count: 'exact', head: true }) // más eficiente para solo chequear existencia
+        .select('*', { count: 'exact', head: true })
         .limit(1);
 
-      // si hay error en la consulta, asumimos que no existe o no hay permisos
       return !error;
     } catch {
       return false;
     }
   }
 
-  // dentro de SupabaseService
   async insertProfile(profile: { auth_id: string; nombre: string; apellido: string; edad: number; email: string }) {
     try {
-      const tableExists = await this.checkTableExists('usuarios'); // <- tabla real
+      const tableExists = await this.checkTableExists('usuarios');
       if (!tableExists) {
         throw new Error('La tabla "usuarios" no existe en la base de datos. Por favor, contacte al administrador.');
       }
 
-      // Insertamos en la tabla "usuarios" usando auth_id (UUID)
       const { data, error } = await this.supabase
         .from('usuarios')
         .insert([{

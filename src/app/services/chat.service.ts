@@ -24,7 +24,6 @@ export interface Message {
 export class ChatService {
   messages: WritableSignal<Message[]> = signal<Message[]>([]);
 
-  // canal único y callbacks de notificación
   private channel: any = null;
   private onNewMessageCallbacks: Array<(m: Message) => void> = [];
 
@@ -103,7 +102,6 @@ export class ChatService {
       return;
     }
 
-    // Para UX, podemos añadirlo inmediatamente, pero chequeamos duplicados por id.
     const rows = (data ?? []) as any[];
     if (rows.length > 0) {
       const insertedMessage = this.normalizeRowToMessage(rows[0]);
@@ -121,10 +119,9 @@ export class ChatService {
         .on(
           'postgres_changes',
           { event: 'INSERT', schema: 'public', table: 'messages' },
-          // handler async: re-fetch la fila completa (con usuario) para poder normalizar correctamente
           async (payload: any) => {
             try {
-              const id = (payload.new as any)['id']; // evita TS4111
+              const id = (payload.new as any)['id'];
               if (!id) return;
 
               const { data, error } = await supabase
@@ -142,12 +139,10 @@ export class ChatService {
 
               const normalized = this.normalizeRowToMessage(data);
 
-              // dedupe por id
               this.messages.update((msgs) =>
                 msgs.some((m) => m.id === normalized.id) ? msgs : [...msgs, normalized]
               );
 
-              // notificar callbacks (ej: componente para scrollear)
               this.onNewMessageCallbacks.forEach((cb) => {
                 try { cb(normalized); } catch (e) { console.error('onNewMessage callback falló:', e); }
               });

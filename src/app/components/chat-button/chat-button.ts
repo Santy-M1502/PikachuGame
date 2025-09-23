@@ -19,7 +19,6 @@ export class ChatButton implements OnInit, AfterViewInit, OnDestroy {
   currentUsuarioId: number | null = null;
   userId = signal<string | null>(null);
 
-  // ahora guardamos la función para desregistrar el callback
   private unsubscribeOnNewMessage: (() => void) | null = null;
 
   constructor(
@@ -36,16 +35,12 @@ export class ChatButton implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async ngOnInit() {
-    // cargar usuario
     await this.loadUser();
 
-    // traer los mensajes iniciales
     await this.chatService.fetchMessages();
     this.cdr.detectChanges();
 
-    // registrarnos solo para notificaciones de "nuevo mensaje" (para scrollear y forzar detectChanges)
     this.unsubscribeOnNewMessage = this.chatService.registerOnNewMessage((nuevo: Message) => {
-      // el ChatService ya actualizó la lista (dedupe incluida).
       this.cdr.detectChanges();
       if (this.open) this.scrollToBottom();
     });

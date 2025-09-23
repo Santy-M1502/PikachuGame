@@ -1,12 +1,7 @@
 import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
-import { Register } from './pages/register/register';
-import { Bienvenida } from './pages/bienvenida/bienvenida';
-import { QuienSoy } from './pages/quien-soy/quien-soy';
 import { AuthGuard } from './guards/auth.guard-guard';
 import { NotFound } from './pages/not-found/not-found';
-import { Juegos } from './pages/juegos/juegos';
-import { MayorOmenor } from './pages/mayor-omenor/mayor-omenor';
 import { Ahorcado } from './pages/ahorcado/ahorcado';
 
 export const routes: Routes = [
@@ -21,29 +16,29 @@ export const routes: Routes = [
     },
     {
         path: 'register',
-        component: Register
+        loadComponent: () => import('./pages/register/register').then(m => m.Register)
     },
     {
         path: 'bienvenida',
-        component: Bienvenida
+        loadComponent: () => import('./pages/bienvenida/bienvenida').then(m => m.Bienvenida)
     },
     {
         path: 'quien-soy',
-        component: QuienSoy,
+        loadComponent: () => import('./pages/quien-soy/quien-soy').then(m => m.QuienSoy),
         canActivate: [AuthGuard]
     },
     {
         path: 'juegos',
-        component: Juegos
+        loadComponent: () => import('./pages/juegos/juegos').then(m => m.Juegos),
     },
     {
         path: 'juego1',
-        component: Ahorcado,
+        loadComponent: () => import('./pages/ahorcado/ahorcado').then(m => m.Ahorcado),
         canActivate: [AuthGuard]
     },
     {
         path: 'juego2',
-        component: MayorOmenor,
+        loadComponent: () => import('./pages/mayor-omenor/mayor-omenor').then(m => m.MayorOmenor),
         canActivate: [AuthGuard]
     },
     {
