@@ -2,6 +2,16 @@ import { Injectable } from '@angular/core';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '../../supabase.config';
 
+export interface Usuario {
+  id: number;
+  auth_id: string;
+  nombre: string;
+  apellido: string;
+  email?: string;
+  edad?: number;
+  created_at?: string;
+}
+
 export interface Juego {
   id: number;
   nombre: string;
@@ -11,10 +21,11 @@ export interface Juego {
 export interface Puntaje {
   id: number;
   juego_id: number;
+  user_id: number;
   puntos: number;
-  tiempo?: number | null;
+  tiempo?: string;
+  usuarios?: Usuario;
 }
-
 
 @Injectable({
   providedIn: 'root'
@@ -51,7 +62,7 @@ export class SupabaseService {
     try {
       const tableExists = await this.checkTableExists('usuarios');
       if (!tableExists) {
-        throw new Error('La tabla "usuarios" no existe en la base de datos. Por favor, contacte al administrador.');
+        throw new Error('La tabla "usuarios" no existe en la base de datos.');
       }
 
       const { data, error } = await this.supabase
@@ -65,14 +76,9 @@ export class SupabaseService {
         }])
         .select('id, auth_id, nombre, apellido, email');
 
-      if (error) {
-        console.error('Error inserting profile:', error);
-        throw error;
-      }
-
+      if (error) throw error;
       return { data, error: null };
     } catch (err: any) {
-      console.error('Error in insertProfile:', err);
       return { data: null, error: err };
     }
   }
@@ -91,9 +97,16 @@ export class SupabaseService {
       .insert([data])
       .select()
       .single();
-      
     if (error) throw error;
     return res;
+  }
+
+  async getJuegos() {
+    const { data, error } = await this.supabase
+      .from('juegos')
+      .select('*');
+    if (error) throw error;
+    return data || [];
   }
 
   async getJuegoPorNombre(nombre: string) {
@@ -101,7 +114,6 @@ export class SupabaseService {
       .from('juegos')
       .select('*')
       .eq('nombre', nombre);
-
     if (error) throw error;
     return data;
   }
@@ -112,8 +124,48 @@ export class SupabaseService {
       .insert([data])
       .select()
       .single();
-
     if (error) throw error;
     return res;
+  }
+
+  // 1. Top 10 usuarios con más puntos en general
+  async getUsuariosConMasPuntosJS(limit: number = 10) {
+    const { data, error } = await this.supabase.rpc('get_usuarios_con_mas_puntos', { limit_param: limit });
+
+    if (error) throw error;
+    return data;
+  }
+
+  // 2. Top 10 usuarios con más puntos en un juego específico
+  async getUsuariosConMasPuntosPorJuegoJS(juego_id: number, limit: number = 10) {
+    const { data, error } = await this.supabase.rpc(
+      'get_usuarios_con_mas_puntos_por_juego',
+      { juego_id_param: juego_id, limit_param: limit }
+    );
+
+    if (error) throw error;
+    return data;
+  }
+
+  // 3. Top 10 usuarios con menor tiempo en un juego
+  async getUsuariosConMejorTiempoJS(juego_id: number, limit: number = 10) {
+    const { data, error } = await this.supabase.rpc(
+      'get_usuarios_con_mejor_tiempo',
+      { juego_id_param: juego_id, limit_param: limit }
+    );
+
+    if (error) throw error;
+    return data;
+  }
+
+  // 4. Top 10 puntajes de un juego
+  async getTopPuntajesJS(juego_id: number, top: number = 10) {
+    const { data, error } = await this.supabase.rpc(
+      'get_top_puntajes_por_juego',
+      { juego_id_param: juego_id, limit_param: top }
+    );
+
+    if (error) throw error;
+    return data;
   }
 }

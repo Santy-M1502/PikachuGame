@@ -1,0 +1,55 @@
+<app-nav-bar></app-nav-bar>
+<div class="experiencia-container">
+  <h2>Ranking de Usuarios</h2>
+
+  <!-- Selección de tipo -->
+  <label for="tipo">Selecciona tipo:</label>
+  <select
+    id="tipo"
+    [value]="tipoSeleccionado()"
+    (change)="tipoSeleccionado.set($any($event.target).value)"
+  >
+    <option value="">-- Selecciona --</option>
+    <option *ngFor="let t of tipos" [value]="t.value">{{ t.label }}</option>
+  </select>
+
+  <!-- Selección de juego (solo si aplica) -->
+  <div *ngIf="tipoSeleccionado() !== 'masPuntosGeneral' && tipoSeleccionado() !== ''">
+    <label for="juego">Selecciona juego:</label>
+    <select
+      id="juego"
+      [value]="juegoSeleccionado() ?? ''"
+      (change)="juegoSeleccionado.set(+($any($event.target).value))"
+    >
+      <option value="">-- Selecciona --</option>
+      <option *ngFor="let j of juegos()" [value]="j.id">{{ j.nombre }}</option>
+    </select>
+  </div>
+
+  <!-- Tabla de resultados -->
+  <table *ngIf="puntajes().length > 0">
+  <thead>
+    <tr>
+      <th>Usuario</th>
+      <th>Puntos</th>
+      <th *ngIf="tipoSeleccionado() === 'mejorTiempo' || tipoSeleccionado() === 'topPuntajes'">Tiempo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of puntajes(); index as i">
+      <td>{{ p.usuarios?.nombre ?? p.nombre }} {{ p.usuarios?.apellido ?? p.apellido }}</td>
+      <td>{{ p.puntos }}</td>
+      <td *ngIf="tipoSeleccionado() === 'mejorTiempo' || tipoSeleccionado() === 'topPuntajes'">
+        {{ p.tiempo }}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+  <!-- Sin resultados -->
+  <p *ngIf="puntajes().length === 0 && tipoSeleccionado()">
+    No hay resultados para esta selección.
+  </p>
+</div>

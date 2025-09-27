@@ -1,0 +1,99 @@
+.experiencia-container {
+    text-align: center;
+    display: flex;
+    height: 100dvh;
+    width: 100dvw;
+    flex-direction: column;
+    justify-self: center;
+    justify-content: center;
+    max-width: 800px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+.experiencia-container h2, option, td {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.experiencia-container label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #444;
+}
+
+.experiencia-container select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    background: linear-gradient(60deg, #f5a623, #ffea2c);
+    color: white;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.experiencia-container select:hover {
+    transform: scale(1.03);
+}
+
+.experiencia-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.experiencia-container th,
+.experiencia-container td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.experiencia-container th {
+    background-color: #f5a623;
+    color: white;
+    font-weight: bold;
+}
+
+.experiencia-container tr:nth-child(even) {
+    background-color: rgba(246, 246, 246, 0.7);
+}
+
+.experiencia-container tr:hover {
+    background-color: rgba(245, 166, 35, 0.2);
+    transform: scale(1.02);
+    transition: all 0.2s;
+}
+
+.experiencia-container p {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    color: #555;
+    font-weight: bold;
+}
+
+button.experiencia-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: #f5a623;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+button.experiencia-btn:hover {
+    background-color: #e08e1a;
+    transform: scale(1.05);
+}
