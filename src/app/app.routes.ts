@@ -37,6 +37,12 @@ export const routes: Routes = [
     canDeactivate: [canDeactivateGuard]
   },
   {
+    path: 'juego3',
+    loadComponent: () => import('./pages/preguntados/preguntados').then(m => m.Preguntados),
+    canActivate: [AuthGuard],
+    canDeactivate: [canDeactivateGuard]
+  },
+  {
     path: 'chat',
     loadComponent: () => import('./pages/chat/chat').then(m => m.Chat),
     canActivate: [AuthGuard]

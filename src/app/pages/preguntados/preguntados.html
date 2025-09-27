@@ -1,0 +1,55 @@
+<div class="quiz-container">
+
+  <div *ngIf="pantalla() === 'inicio'" class="quiz-start">
+    <h1>Preguntados Pokémon</h1>
+    <button (click)="comenzarJuego()">Comenzar</button>
+  </div>
+
+  <!-- Pantalla del juego: solo si ya cargaron preguntas -->
+  <div *ngIf="pantalla() === 'juego' && preguntas().length" class="quiz-game">
+    <p>Tiempo: {{ tiempoTranscurrido() }}s</p>
+    <div class="quiz-stats-panel">
+      <p>Pregunta: {{ numeroPregunta() + 1 }} / {{ totalPreguntas }}</p>
+      <p>Puntaje: {{ puntaje() }}</p>
+      <p>Intentos restantes: {{ intentos() }}</p>
+      <button (click)="abrirModalSalir()">Salir</button>
+    </div>
+
+    <div class="quiz-question-box">
+      <p>{{ preguntaActual.pregunta }}</p>
+    </div>
+
+    <div class="quiz-options">
+      <button
+        *ngFor="let opcion of preguntaActual.opciones"
+        (click)="responder(opcion)"
+        [disabled]="respuestaSeleccionada()">
+        {{ opcion }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Mensaje de carga -->
+  <div *ngIf="pantalla() === 'juego' && !preguntas().length">
+    <p>Cargando preguntas...</p>
+  </div>
+
+  <div *ngIf="pantalla() === 'fin'" class="quiz-end">
+    <h2 *ngIf="gano()">¡Felicidades! Has completado el quiz</h2>
+    <h2 *ngIf="!gano()">Juego Terminado</h2>
+    <p>Tiempo: {{ tiempoTranscurrido() }}s</p>
+    <p>Respuestas correctas: {{ puntaje() }} / {{ totalPreguntas }}</p>
+    <button (click)="reiniciarJuego()">Jugar de nuevo</button>
+  </div>
+
+  <div class="modal-overlay" *ngIf="mostrarModalSalir()">
+    <div class="modal">
+      <h3>¿Seguro que querés salir?</h3>
+      <div class="modal-actions">
+        <button (click)="confirmarSalir()">Sí, salir</button>
+        <button (click)="cancelarSalir()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+</div>
