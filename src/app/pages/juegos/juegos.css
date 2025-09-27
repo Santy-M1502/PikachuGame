@@ -1,6 +1,6 @@
 .home-page {
   position: relative;
-  background: linear-gradient(#fecb00, #ff9400);
+  background: linear-gradient(135deg, #fecb00 0%, #ff9400 100%);
   min-height: 100vh;
   padding: 20px;
   box-sizing: border-box;
@@ -17,6 +17,7 @@
   font-size: 50px;
   margin: 0;
   margin: 1rem 0 0 1rem;
+  margin-top: 5rem;
 }
 
 .back a{
@@ -42,22 +43,6 @@
   opacity: 1;
 }
 
-.home-page::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-color: rgba(255, 210, 0, 0.85);
-
-  -webkit-mask-image: url('../../../assets/rayosPng.png');
-  -webkit-mask-repeat: repeat;
-  -webkit-mask-size: 50px;
-  mask-image: url('../../../assets/rayosPng.png');
-  mask-repeat: repeat;
-  mask-size: 50px;
-}
-
 .section-container {
   display: flex;
   justify-content: space-around;
@@ -66,6 +51,7 @@
   padding: 10px;
   position: relative;
   z-index: 2;
+  margin-top: 5rem;
 }
 
 .pokeball-card {

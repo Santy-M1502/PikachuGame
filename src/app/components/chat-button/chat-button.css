@@ -8,7 +8,7 @@
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  background-color: #FFD93D;
+  background-color: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,8 +18,8 @@
 }
 
 .fab img {
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: auto;
 }
 
 .fab:hover {

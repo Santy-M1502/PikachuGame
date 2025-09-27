@@ -1,0 +1,31 @@
+<app-nav-bar></app-nav-bar>
+<div class="chat-page-container">
+  <div class="chat-window">
+    <header class="chat-header">
+      <div class="chat-title">Chat</div>
+    </header>
+
+    <section class="chat-body" #body>
+      <div *ngIf="getMessages().length === 0" class="empty">
+        Bienvenido — escribe abajo para empezar
+      </div>
+      <div *ngFor="let msg of chatService.messages()" 
+           [ngClass]="{ 'mio': msg.user_id === userId, 'otro': msg.user_id !== userId }">
+        <div class="meta">
+          <span class="name">{{ msg.usuario ? (msg.usuario.nombre + ' ' + msg.usuario.apellido) : 'Anon' }}</span>
+          <span class="time" *ngIf="msg.created_at">{{ msg.created_at | date: 'shortTime' }}</span>
+        </div>
+        <div class="bubble">{{ msg.text }}</div>
+      </div>
+    </section>
+
+    <footer class="chat-footer">
+        <input class="chat-input" 
+                type="text" 
+                placeholder="Escribe un mensaje..."
+                [(ngModel)]="newMessage" 
+                (keyup.enter)="send()" />
+        <button class="btn-send" (click)="send()">➤</button>
+    </footer>
+  </div>
+</div>

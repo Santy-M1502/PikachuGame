@@ -1,6 +1,8 @@
 import { Component, OnInit, signal, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SupabaseService } from '../../services/superbase.service';
+import { supabase } from '../../../supabase.config';
 
 @Component({
   selector: 'app-mayor-omenor',
@@ -65,13 +67,17 @@ export class MayorOmenor implements OnInit {
                k:{valor:13, nombre:'K', imagen:'assets/cartasNaipes/RojoK.png'} } }
   ];
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
-
   cartaAleatoria: any;
   resultado = signal('');
   puntos = signal(0);
   pantalla: 'inicio' | 'juego' | 'fin' = 'inicio';
   cartasUsadas: any[] = [];
+  tiempoInicio = 0;
+  tiempoTranscurrido = signal(0);
+  timerInterval: any;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object,
+              private supabaseService: SupabaseService) {}
 
   getRandomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -100,16 +106,25 @@ export class MayorOmenor implements OnInit {
     this.resultado.set('');
     this.cartasUsadas = [];
     this.cartaAleatoria = this.getCartaAleatoria();
+    this.tiempoInicio = Date.now();
+    this.tiempoTranscurrido.set(0);
+
+    this.timerInterval = setInterval(() => {
+      this.tiempoTranscurrido.set(Math.floor((Date.now() - this.tiempoInicio) / 1000));
+    }, 1000);
+
     this.pantalla = 'juego';
   }
 
   compararCartas(eleccion: 'mayor' | 'menor') {
-    let puntosSumar = 1;
+    let puntosSumar = 1; // base por acertar
 
+    // Bonus por cartas extremas
     if ((eleccion === 'menor' && [1,2,3].includes(this.cartaAleatoria.valor)) ||
         (eleccion === 'mayor' && [11,12,13].includes(this.cartaAleatoria.valor))) {
-      puntosSumar = 5;
+      puntosSumar += 5;
     }
+
     const nuevaCarta = this.getCartaAleatoria();
 
     if ((eleccion === 'mayor' && nuevaCarta.valor >= this.cartaAleatoria.valor) ||
@@ -119,11 +134,55 @@ export class MayorOmenor implements OnInit {
       this.cartaAleatoria = nuevaCarta;
     } else {
       this.resultado.set('Incorrecto!');
-      this.pantalla = 'fin';
+      this.finalizarJuego();
     }
-    if(this.cartasUsadas.length === 52){
+
+    if (this.cartasUsadas.length === 52) {
       this.cartasUsadas = [];
       this.resultado.set('¡Has usado todas las cartas! Reiniciando mazo.');
+    }
+  }
+
+  finalizarJuego() {
+    clearInterval(this.timerInterval);
+    this.tiempoTranscurrido.set(Math.floor((Date.now() - this.tiempoInicio) / 1000));
+    this.pantalla = 'fin';
+    this.guardarPuntaje();
+  }
+
+  async guardarPuntaje() {
+    const { data: userData } = await supabase.auth.getUser();
+    const auth_id = userData.user?.id;
+
+    if (!auth_id) {
+      console.error('Usuario no logueado');
+      return;
+    }
+
+    const { data: usuario } = await supabase
+      .from('usuarios')
+      .select('id')
+      .eq('auth_id', auth_id)
+      .single();
+
+    if (!usuario) {
+      console.error('Usuario no encontrado en tabla "usuarios"');
+      return;
+    }
+
+    // Solo se guarda el puntaje basado en cartas correctas + bonus
+    const puntosFinales = this.puntos() + 135;
+
+    try {
+      const res = await this.supabaseService.crearPuntaje({
+        juego_id: 2,
+        puntos: puntosFinales,
+        tiempo: this.tiempoTranscurrido(), // se guarda pero no afecta puntos
+        user_id: usuario.id
+      });
+      console.log('Puntaje guardado:', res);
+    } catch (error) {
+      console.error('Error guardando puntaje:', error);
     }
   }
 
@@ -137,6 +196,7 @@ export class MayorOmenor implements OnInit {
   ngOnDestroy() {
     if (isPlatformBrowser(this.platformId)) {
       document.body.style.overflow = '';
+      clearInterval(this.timerInterval);
     }
   }
 }

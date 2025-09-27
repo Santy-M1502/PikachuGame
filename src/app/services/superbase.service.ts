@@ -2,6 +2,20 @@ import { Injectable } from '@angular/core';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '../../supabase.config';
 
+export interface Juego {
+  id: number;
+  nombre: string;
+  descripcion: string;
+}
+
+export interface Puntaje {
+  id: number;
+  juego_id: number;
+  puntos: number;
+  tiempo?: number | null;
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -69,5 +83,37 @@ export class SupabaseService {
 
   get client() {
     return this.supabase;
+  }
+
+  async crearPuntaje(data: { juego_id: number; puntos: number; tiempo: number; user_id: number }) {
+    const { error, data: res } = await supabase
+      .from('puntajes')
+      .insert([data])
+      .select()
+      .single();
+      
+    if (error) throw error;
+    return res;
+  }
+
+  async getJuegoPorNombre(nombre: string) {
+    const { data, error } = await supabase
+      .from('juegos')
+      .select('*')
+      .eq('nombre', nombre);
+
+    if (error) throw error;
+    return data;
+  }
+
+  async crearJuego(data: { nombre: string; descripcion: string }) {
+    const { data: res, error } = await supabase
+      .from('juegos')
+      .insert([data])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return res;
   }
 }

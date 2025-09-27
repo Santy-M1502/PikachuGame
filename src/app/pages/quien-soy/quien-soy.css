@@ -7,15 +7,18 @@
   background-image: url('/assets/background.png');
   background-position: bottom;
   color: #4F200D;
-  min-height: 100dvh;
+  min-height: calc(100dvh - 80px);
   text-align: center;
-  
 }
 
 .loading, .error{
   height: 100dvh;
   font-size: 5rem;
   text-align: center;
+}
+
+.perfil{
+  margin-top: 40px;
 }
 
 .perfil, .explicacion-juego{

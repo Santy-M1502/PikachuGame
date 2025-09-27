@@ -182,11 +182,6 @@ export class ChatService {
         .subscribe();
     }
 
-
-  /**
-   * Registra un callback que se ejecuta cuando llega un nuevo mensaje.
-   * Devuelve una función de cancelación para removerlo.
-   */
   registerOnNewMessage(cb: (m: Message) => void): () => void {
     this.onNewMessageCallbacks.push(cb);
     return () => {

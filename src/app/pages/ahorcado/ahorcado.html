@@ -6,28 +6,30 @@
         <button (click)="comenzarJuego()">Empezar</button>
     </div>
     <div *ngIf="pantalla === 'juego'" class="game">
-    <div class="info">
-        <h2>Adivina el Pokemon</h2>
-        <img [src]="horca" alt="Horca">
-        <p>Letras Usadas: {{ adivinados.join(', ') }}</p>
-        <p>Intentos: {{ intentos }}</p>
+      <div class="info">
+          <h2>Adivina el Pokemon</h2>
+          <img [src]="horca" alt="Horca">
+          <div class="text-container">
+          <p>Letras Usadas: {{ adivinados.join(', ') }}</p>
+          <p>Intentos: {{ intentos }}</p>
+          <p>Tiempo: {{ tiempoTranscurrido() }} s</p>
+          <p class="palabra">
+          {{ palabraMostrada }}
+          </p>
+          <p *ngIf="palabraSecreta">Cantidad de letras: {{ palabraSecreta.length }}</p>
+          </div>
+      </div>
 
-        <p class="palabra">
-        {{ palabraMostrada }}
-        </p>
-        <p *ngIf="palabraSecreta">Cantidad de letras: {{ palabraSecreta.length }}</p>
-    </div>
-
-    <div class="game-area">
-        <div class="teclado">
-        <button
-            *ngFor="let letra of letras" 
-            (click)="adivinar(letra)" 
-            [disabled]="adivinados.includes(letra.toLowerCase() || letra.toUpperCase()) || gano || intentos === 0">
-            {{ letra }}
-        </button>
-        </div>
-    </div>
+      <div class="game-area">
+          <div class="teclado">
+          <button
+              *ngFor="let letra of letras" 
+              (click)="adivinar(letra)" 
+              [disabled]="adivinados.includes(letra.toLowerCase() || letra.toUpperCase()) || gano || intentos === 0">
+              {{ letra }}
+          </button>
+          </div>
+      </div>
     </div>
 
     <div class="final" *ngIf="pantalla === 'fin'">
@@ -40,3 +42,15 @@
     <img *ngIf="gano" [src]="selectedPokemon?.sprites?.front_default" alt="Pokemon">
     <button (click)="reiniciarJuego()">Jugar de nuevo</button>
     </div>
+    
+<!-- Modal de confirmación -->
+<div class="modal-overlay" *ngIf="mostrarModalSalir">
+  <div class="modal">
+    <h3>¿Seguro que querés salir?</h3>
+    <p>Si salís, vas a perder el puntaje actual.</p>
+    <div class="modal-actions">
+      <button (click)="confirmarSalir()">Sí, salir</button>
+      <button (click)="cancelarSalir()">Cancelar</button>
+    </div>
+  </div>
+</div>
