@@ -5,7 +5,7 @@
   background: linear-gradient(90deg, #ffcb05 0%, #f5b700 100%);
   padding: 10px 0;
   position: absolute;
-  width: 100dvw;
+  width: 100%;
   top: 0;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
@@ -116,7 +116,7 @@
   .navbar {
     flex-direction: column;
     align-items: flex-start;
-    padding: 10px 1rem;
+    padding: 10px 0rem;
   }
   
   .menu-toggle {

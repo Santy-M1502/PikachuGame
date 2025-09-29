@@ -43,7 +43,7 @@ export const routes: Routes = [
     canDeactivate: [canDeactivateGuard]
   },
   {
-    path: 'experience',
+    path: 'registro',
     loadComponent: () => import('./pages/experiencia/experiencia').then(m => m.Experiencia),
     canActivate: [AuthGuard],
     canDeactivate: [canDeactivateGuard]
