@@ -4,13 +4,14 @@ import { NavBar } from './components/nav-bar/nav-bar';
 import { Footer } from './components/footer/footer';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
+import { SearchFilterPipe } from './pipes/search-filter-pipe';
 
 
 @Component({
   selector: 'app-root',
   imports: [  CommonModule, RouterModule, NavBar ],
   templateUrl: './app.html',
-  styleUrls: ['./app.css']
+  styleUrls: ['./app.css'],
 })
 export class App {
   mostrarNavFooter = false;

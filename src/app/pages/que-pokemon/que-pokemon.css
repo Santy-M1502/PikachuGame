@@ -1,0 +1,141 @@
+.game-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url('../../../assets/quePokemon/fondoPokemon.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.inicio, .fin {
+  background: linear-gradient(60deg, #911f12, #d33818);
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.retro-tv-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.tv {
+  position: relative;
+  width: 600px;
+  max-width: 90vw;
+  border: 16px solid #5a3e2b;
+  border-radius: 30px;
+  background: #222;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.tv-screen {
+  position: relative;
+  background-image: url('../../../assets/quePokemon/fondoQuienEs.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 400px;
+  display: flex;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.pokemon-area {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.pokemon-image {
+  height: 200px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  margin-right: 20px;
+}
+
+.info-area {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: white;
+  background-color: rgba(0,0,0,0.3);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.answer-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.answer-buttons button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #f5a623;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.answer-buttons button:hover {
+  background-color: #e08e1a;
+  transform: scale(1.05);
+}
+
+.tv-buttons {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+.tv-buttons .button {
+  width: 30px;
+  height: 30px;
+  background: #555;
+  border-radius: 50%;
+  border: 2px solid #222;
+}
+
+.tv-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    rgba(255,255,255,0.02) 0 1px,
+    transparent 1px 2px
+  );
+  border-radius: 15px;
+  pointer-events: none;
+}
+
+@media(max-width: 600px){
+  .tv-screen {
+    flex-direction: column;
+    height: 300px;
+    padding: 10px;
+  }
+
+  .pokemon-image {
+    margin-right: 0;
+    margin-bottom: 10px;
+    height: 150px;
+  }
+
+  .info-area {
+    flex: unset;
+    width: 100%;
+  }
+
+  .answer-buttons {
+    justify-content: center;
+  }
+}

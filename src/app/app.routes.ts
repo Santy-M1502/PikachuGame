@@ -43,6 +43,12 @@ export const routes: Routes = [
     canDeactivate: [canDeactivateGuard]
   },
   {
+    path: 'juego4',
+    loadComponent: () => import('./pages/que-pokemon/que-pokemon').then(m => m.QuePokemon),
+    canActivate: [AuthGuard],
+    canDeactivate: [canDeactivateGuard]
+  },
+  {
     path: 'registro',
     loadComponent: () => import('./pages/experiencia/experiencia').then(m => m.Experiencia),
     canActivate: [AuthGuard],

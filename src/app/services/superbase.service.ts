@@ -168,4 +168,38 @@ export class SupabaseService {
     if (error) throw error;
     return data;
   }
+
+  async searchUsuariosPorNombre(query: string) {
+    if (!query || query.trim().length === 0) return [];
+    const q = query.trim();
+    const { data, error } = await this.supabase
+      .from('usuarios')
+      .select('id,nombre,apellido,email')
+      .or(`nombre.ilike.%${q}%,apellido.ilike.%${q}%`);
+    if (error) throw error;
+    return data || [];
+  }
+
+  async getPuntajesPorUsuarios(userIds: number[], juego_id?: number) {
+    if (!userIds || userIds.length === 0) return [];
+    let query = this.supabase
+      .from('puntajes')
+      .select('*, usuarios(*)')
+      .in('user_id', userIds);
+
+    if (juego_id) {
+      query = query.eq('juego_id', juego_id);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data || [];
+  }
+
+  async searchPuntajesByTerm(term: string, juego_id?: number) {
+    const usuarios = await this.searchUsuariosPorNombre(term);
+    const ids = (usuarios || []).map(u => u.id);
+    return await this.getPuntajesPorUsuarios(ids, juego_id);
+  }
+
 }
