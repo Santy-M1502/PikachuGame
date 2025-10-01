@@ -158,16 +158,17 @@ export class SupabaseService {
     return data;
   }
 
-  // 4. Top 10 puntajes de un juego
-  async getTopPuntajesJS(juego_id: number, top: number = 10) {
+  // 4. Top puntajes de un juego
+  async getTopPuntajesJS(juego_id: number, limit: number = 10) {
     const { data, error } = await this.supabase.rpc(
       'get_top_puntajes_por_juego',
-      { juego_id_param: juego_id, limit_param: top }
+      { juego_id_param: juego_id, limit_param: limit }
     );
 
     if (error) throw error;
     return data;
   }
+
 
   async searchUsuariosPorNombre(query: string) {
     if (!query || query.trim().length === 0) return [];
@@ -180,12 +181,13 @@ export class SupabaseService {
     return data || [];
   }
 
-  async getPuntajesPorUsuarios(userIds: number[], juego_id?: number) {
+  async getPuntajesPorUsuarios(userIds: number[], juego_id?: number, limit: number = 10) {
     if (!userIds || userIds.length === 0) return [];
     let query = this.supabase
       .from('puntajes')
       .select('*, usuarios(*)')
-      .in('user_id', userIds);
+      .in('user_id', userIds)
+      .limit(limit);
 
     if (juego_id) {
       query = query.eq('juego_id', juego_id);
@@ -199,7 +201,7 @@ export class SupabaseService {
   async searchPuntajesByTerm(term: string, juego_id?: number) {
     const usuarios = await this.searchUsuariosPorNombre(term);
     const ids = (usuarios || []).map(u => u.id);
-    return await this.getPuntajesPorUsuarios(ids, juego_id);
+    return await this.getPuntajesPorUsuarios(ids, juego_id, 10);
   }
 
 }

@@ -19,48 +19,52 @@
     [value]="tipoSeleccionado()"
     (change)="onTipoChange($any($event.target).value)"
   >
-    <option value="">-- Selecciona --</option>
-    <option *ngFor="let t of tipos" [value]="t.value">{{ t.label }}</option>
+    @for(t of tipos; track $index){<option [value]="t.value">{{ t.label }}</option>}
   </select>
 
   <!-- Selección de juego (solo si aplica) -->
-  <div *ngIf="tipoSeleccionado() !== 'masPuntosGeneral' && tipoSeleccionado() !== ''" style="margin-top:8px;">
-    <label for="juego">Selecciona juego:</label>
-    <select
-      id="juego"
-      [value]="juegoSeleccionado() ?? ''"
-      (change)="onJuegoChange( +($any($event.target).value) || null )"
-    >
-      <option value="">-- Selecciona --</option>
-      <option *ngFor="let j of juegos()" [value]="j.id">{{ j.nombre }}</option>
-    </select>
-  </div>
+   @if(tipoSeleccionado() !== 'masPuntosGeneral' && tipoSeleccionado() !== ''){
+    <div style="margin-top:8px;">
+      <label for="juego">Selecciona juego:</label>
+      <select
+        id="juego"
+        [value]="juegoSeleccionado() ?? ''"
+        (change)="onJuegoChange( +($any($event.target).value) || null )"
+      >
+        <option value="">-- Selecciona --</option>
+        @for(j of juegos(); track $index){<option [value]="j.id">{{ j.nombre }}</option>}
+      </select>
+    </div>
+    }
 
   <!-- Tabla de resultados -->
-  <table *ngIf="puntajes().length > 0" style="margin-top:12px;">
+   @if(puntajes().length > 0){
+  <table style="margin-top:12px;">
     <thead>
       <tr>
         <th>Usuario</th>
         <th>Puntos</th>
-        <th *ngIf="tipoSeleccionado() === 'mejorTiempo' || tipoSeleccionado() === 'topPuntajes'">Tiempo</th>
+        @if(tipoSeleccionado() === 'mejorTiempo' || tipoSeleccionado() === 'topPuntajes'){<th>Tiempo</th>}
       </tr>
     </thead>
     <tbody>
-      <!-- Si querés filtrar cliente adicionalmente por searchTerm (p.e. cuando term < 3) podés usar la pipe aquí -->
-      <tr *ngFor="let p of puntajes() | searchFilter: (searchTerm() || '') : 'usuarios.nombre,usuarios.apellido,nombre,apellido' ; index as i">
+      @for (p of puntajes() | searchFilter : (searchTerm() || '') : 'usuarios.nombre,usuarios.apellido,nombre,apellido'; track $index) {
+      <tr>
         <td>{{ p.usuarios?.nombre ?? p.nombre }} {{ p.usuarios?.apellido ?? p.apellido }}</td>
         <td>{{ p.puntos }}</td>
-        <td *ngIf="tipoSeleccionado() === 'mejorTiempo' || tipoSeleccionado() === 'topPuntajes'">
-          {{ p.tiempo }}
-        </td>
+        @if(tipoSeleccionado() === 'mejorTiempo' || tipoSeleccionado() === 'topPuntajes'){<td>{{ p.tiempo }}</td>}
       </tr>
+      }
     </tbody>
   </table>
+}
 
   <!-- Sin resultados -->
-  <p *ngIf="puntajes().length === 0 && tipoSeleccionado()">
-    No hay resultados para esta selección.
-  </p>
+   @if(puntajes().length === 0 && tipoSeleccionado()){
+    <p>
+      No hay resultados para esta selección.
+    </p>
+    }
 
-  <p *ngIf="loading()">Cargando...</p>
+  @if(loading()){<p>Cargando...</p>}
 </div>

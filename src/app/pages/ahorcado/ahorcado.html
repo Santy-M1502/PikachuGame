@@ -1,56 +1,71 @@
 <div class="container">
-    <div *ngIf="pantalla === 'inicio'" class="bienvenida">
-        <h1>Ahorcado</h1>
-        <p>¡Bienvenido al juego del Ahorcado!</p>
-        <p>Intenta adivinar el nombre del pokemon antes de que se acaben tus intentos.</p>
-        <button (click)="comenzarJuego()">Empezar</button>
+  @if (pantalla === 'inicio') {
+    <div class="bienvenida">
+      <h1>Ahorcado</h1>
+      <p>¡Bienvenido al juego del Ahorcado!</p>
+      <p>Intenta adivinar el nombre del pokemon antes de que se acaben tus intentos.</p>
+      <button (click)="comenzarJuego()">Empezar</button>
     </div>
-    <div *ngIf="pantalla === 'juego'" class="game">
+  }
+
+  @if (pantalla === 'juego') {
+    <div class="game">
       <div class="info">
-          <h2>Adivina el Pokemon</h2>
-          <img [src]="horca" alt="Horca">
-          <div class="text-container">
+        <h2>Adivina el Pokemon</h2>
+        <img [src]="horca" alt="Horca">
+        <div class="text-container">
           <p>Letras Usadas: {{ adivinados.join(', ') }}</p>
           <p>Intentos: {{ intentos }}</p>
           <p>Tiempo: {{ tiempoTranscurrido() }} s</p>
-          <p class="palabra">
-          {{ palabraMostrada }}
-          </p>
-          <p *ngIf="palabraSecreta">Cantidad de letras: {{ palabraSecreta.length }}</p>
-          </div>
+          <p class="palabra">{{ palabraMostrada }}</p>
+          @if (palabraSecreta) {
+            <p>Cantidad de letras: {{ palabraSecreta.length }}</p>
+          }
+        </div>
       </div>
 
       <div class="game-area">
-          <div class="teclado">
-          <button
-              *ngFor="let letra of letras" 
+        <div class="teclado">
+          @for (letra of letras; track $index) {
+            <button 
               (click)="adivinar(letra)" 
               [disabled]="adivinados.includes(letra.toLowerCase() || letra.toUpperCase()) || gano || intentos === 0">
               {{ letra }}
-          </button>
-          </div>
+            </button>
+          }
+        </div>
       </div>
     </div>
+  }
 
-    <div class="final" *ngIf="pantalla === 'fin'">
-    <h2 *ngIf="gano">¡Felicidades! Has adivinado {{ palabraSecreta | uppercase }}</h2>
-    <h2 *ngIf="!gano">Juego Terminado</h2>
-    <div *ngIf="!gano">
-        <p >El pokemon era: {{ palabraSecreta | uppercase }}</p>
+  @if (pantalla === 'fin') {
+    <div class="final">
+      @if (gano) {
+        <h2>¡Felicidades! Has adivinado {{ palabraSecreta | uppercase }}</h2>
         <img [src]="selectedPokemon?.sprites?.front_default" alt="Pokemon">
+      }
+      @else {
+        <h2>Juego Terminado</h2>
+        <div>
+          <p>El pokemon era: {{ palabraSecreta | uppercase }}</p>
+          <img [src]="selectedPokemon?.sprites?.front_default" alt="Pokemon">
+        </div>
+      }
+
+      <button (click)="reiniciarJuego()">Jugar de nuevo</button>
     </div>
-    <img *ngIf="gano" [src]="selectedPokemon?.sprites?.front_default" alt="Pokemon">
-    <button (click)="reiniciarJuego()">Jugar de nuevo</button>
+  }
+
+  @if (mostrarModalSalir) {
+    <div class="modal-overlay">
+      <div class="modal">
+        <h3>¿Seguro que querés salir?</h3>
+        <p>Si salís, vas a perder el puntaje actual.</p>
+        <div class="modal-actions">
+          <button (click)="confirmarSalir()">Sí, salir</button>
+          <button (click)="cancelarSalir()">Cancelar</button>
+        </div>
+      </div>
     </div>
-    
-<!-- Modal de confirmación -->
-<div class="modal-overlay" *ngIf="mostrarModalSalir">
-  <div class="modal">
-    <h3>¿Seguro que querés salir?</h3>
-    <p>Si salís, vas a perder el puntaje actual.</p>
-    <div class="modal-actions">
-      <button (click)="confirmarSalir()">Sí, salir</button>
-      <button (click)="cancelarSalir()">Cancelar</button>
-    </div>
-  </div>
+  }
 </div>

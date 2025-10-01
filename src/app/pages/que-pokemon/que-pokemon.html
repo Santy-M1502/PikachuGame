@@ -1,14 +1,17 @@
 <div class="game-container">
 
   <!-- Pantalla de inicio -->
-  <div *ngIf="pantalla() === 'inicio'" class="inicio">
+  @if(pantalla() === 'inicio'){
+  <div class="inicio">
     <h1>¡Quién es ese Pokémon?</h1>
     <p>Observa la silueta y selecciona la opción correcta. ¡Acumula puntos!</p>
     <button (click)="comenzarJuego()">Iniciar</button>
   </div>
+  }
 
   <!-- Pantalla de juego -->
-  <div *ngIf="pantalla() === 'juego'" class="retro-tv-container">
+   @if(pantalla() === 'juego'){
+  <div class="retro-tv-container">
 
     <div class="tv">
       <div class="tv-screen">
@@ -20,14 +23,14 @@
           <h2>¿Quién es este Pokémon?</h2>
           <p>Puntos: {{ puntos() }}</p>
           <p>Tiempo total: {{ tiempo() }}s</p>
-          <p *ngIf="resultado()">{{ resultado() }}</p>
+          @if(resultado()){<p>{{ resultado() }}</p>}
 
           <div class="answer-buttons">
-            <button *ngFor="let opcion of opciones()" 
-                    (click)="seleccionarOpcion(opcion)" 
-                    [disabled]="!botonesHabilitados()">
-              {{ opcion }}
-            </button>
+            @for(opcion of opciones(); track $index){
+              <button (click)="seleccionarOpcion(opcion)" [disabled]="!botonesHabilitados()">
+                {{ opcion }}
+              </button>
+            }
           </div>
         </div>
       </div>
@@ -40,12 +43,28 @@
     </div>
 
   </div>
+  }
 
   <!-- Pantalla de fin -->
-  <div *ngIf="pantalla() === 'fin'" class="fin">
-    <h1>¡Juego Terminado!</h1>
-    <p>Tu puntaje final: {{ puntos() }}</p>
-    <button (click)="reiniciarJuego()">Volver a inicio</button>
-  </div>
+   @if(pantalla() === 'fin'){
+    <div class="fin">
+      <h1>¡Juego Terminado!</h1>
+      <p>Tu puntaje final: {{ puntos() }}</p>
+      <button (click)="reiniciarJuego()">Volver a inicio</button>
+    </div>
+  }
+
+  @if(mostrarModalSalir()){
+    <div class="modal-overlay">
+      <div class="modal">
+        <h3>¿Seguro que querés salir?</h3>
+        <p>Si salís, vas a perder el puntaje actual.</p>
+        <div class="modal-actions">
+          <button (click)="confirmarSalir()">Sí, salir</button>
+          <button (click)="cancelarSalir()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  }
 
 </div>

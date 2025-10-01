@@ -13,10 +13,11 @@
             placeholder="Ejemplo@email.com"
             />
         </div>
-        <div color="danger" *ngIf="showErrors() && !isEmailValid()">
-          <p>El email no es válido</p>
-        </div>
-
+        @if(showErrors() && !isEmailValid()){
+          <div color="danger">
+            <p>El email no es válido</p>
+          </div>
+        }
         <div>
           <div position="stacked">
           <div position="stacked">Password</div>
@@ -56,11 +57,13 @@
     </div>
   </div>
 </div>
-<div class="modal-backdrop" *ngIf="showModal()">
-  <div class="modal">
-    <h3>Error de inicio de sesión</h3>
-    <p>{{ modalMessage() }}</p>
-    <button class="modal-btn" (click)="closeModal()">Cerrar</button>
+@if(showModal()){
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Error de inicio de sesión</h3>
+      <p>{{ modalMessage() }}</p>
+      <button class="modal-btn" (click)="closeModal()">Cerrar</button>
+    </div>
   </div>
-</div>
+}
 

@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { PokemonService } from '../../services/api.service';
 import { SupabaseService } from '../../services/superbase.service';
 import { lastValueFrom } from 'rxjs';
+import { RespuestaCorrectaIncorrectaDirective } from '../../directive/respuesta-estado';
+import { CanComponentDeactivate } from '../../guards/can-deactivate-guard';
+import { HostListener } from '@angular/core';
 
 interface Pregunta {
   pregunta: string;
@@ -15,7 +18,7 @@ interface Pregunta {
   selector: 'app-preguntados',
   templateUrl: './preguntados.html',
   styleUrls: ['./preguntados.css'],
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, RespuestaCorrectaIncorrectaDirective]
 })
 export class Preguntados implements OnInit, OnDestroy {
 
@@ -26,8 +29,12 @@ export class Preguntados implements OnInit, OnDestroy {
   intentos = signal(3);
   respuestaSeleccionada = signal(false);
   gano = signal(false);
-  mostrarModalSalir = signal(false);
   tiempoTranscurrido = signal(0);
+  opcionSeleccionada: string | null = null;
+
+  mostrarModalSalir = signal(false);
+  juegoEnCurso = false;
+  private resolveFn: ((value: boolean) => void) | null = null;
 
   private JUEGO_ID = 3;
   private tiempoInicio = 0;
@@ -44,7 +51,45 @@ export class Preguntados implements OnInit, OnDestroy {
     clearInterval(this.timerInterval);
   }
 
+  @HostListener('window:beforeunload', ['$event'])
+  unloadHandler(event: BeforeUnloadEvent) {
+    if (this.juegoEnCurso && this.pantalla() === 'juego') {
+      event.preventDefault();
+      event.returnValue = 'Si salís, vas a perder el puntaje actual.';
+    }
+  }
+
+  canDeactivate(): boolean | Promise<boolean> {
+    if (this.juegoEnCurso && this.pantalla() === 'juego') {
+      this.mostrarModalSalir.set(true);
+      return new Promise<boolean>((resolve) => {
+        this.resolveFn = resolve;
+      });
+    }
+    return true;
+  }
+
+  confirmarSalir() {
+    this.mostrarModalSalir.set(false);
+    this.pantalla.set('inicio');
+    this.juegoEnCurso = false;
+    if (this.resolveFn) {
+      this.resolveFn(true);
+      this.resolveFn = null;
+    }
+    clearInterval(this.timerInterval);
+  }
+
+  cancelarSalir() {
+    this.mostrarModalSalir.set(false);
+    if (this.resolveFn) {
+      this.resolveFn(false);
+      this.resolveFn = null;
+    }
+  }
+
   async comenzarJuego() {
+    this.juegoEnCurso = true;
     this.pantalla.set('juego');
     this.numeroPregunta.set(0);
     this.puntaje.set(0);
@@ -55,7 +100,6 @@ export class Preguntados implements OnInit, OnDestroy {
 
     this.preguntas.set(await this.generarPreguntas(5));
 
-    // iniciar timer
     this.tiempoInicio = Date.now();
     this.timerInterval = setInterval(() => {
       this.tiempoTranscurrido.set(Math.floor((Date.now() - this.tiempoInicio) / 1000));
@@ -141,11 +185,19 @@ export class Preguntados implements OnInit, OnDestroy {
     return `${str.slice(0, -1)}.${str.slice(-1)}`;
   }
 
+  getEstadoRespuesta(opcion: string): 'correcta' | 'incorrecta' | null {
+    if (!this.respuestaSeleccionada()) return null;
+    if (opcion === this.preguntaActual.correcta) return 'correcta';
+    if (this.opcionSeleccionada === opcion) return 'incorrecta';
+    return null;
+  }
+
   get totalPreguntas() { return this.preguntas().length; }
   get preguntaActual(): Pregunta { return this.preguntas()[this.numeroPregunta()]; }
 
   async responder(opcion: string) {
     this.respuestaSeleccionada.set(true);
+    this.opcionSeleccionada = opcion;
 
     if (opcion === this.preguntaActual.correcta) {
       this.puntaje.set(this.puntaje() + 1);
@@ -153,12 +205,15 @@ export class Preguntados implements OnInit, OnDestroy {
       this.intentos.set(this.intentos() - 1);
     }
 
+    if (this.intentos() <= 0) {
+    clearInterval(this.timerInterval);
+    }
+
     setTimeout(async () => {
       const siguiente = this.numeroPregunta() + 1;
       if (siguiente >= this.totalPreguntas || this.intentos() <= 0) {
         this.gano.set(this.intentos() > 0);
         this.pantalla.set('fin');
-
         clearInterval(this.timerInterval);
         const tiempoFinal = this.tiempoTranscurrido();
 
@@ -180,23 +235,17 @@ export class Preguntados implements OnInit, OnDestroy {
             tiempo: tiempoFinal,
             user_id: usuario.id
           });
-          console.log('Puntaje guardado correctamente');
         } catch (error) {
           console.error('Error guardando puntaje:', error);
         }
-
       } else {
         this.numeroPregunta.set(siguiente);
         this.respuestaSeleccionada.set(false);
+        this.opcionSeleccionada = null;
       }
-    }, 500);
+    }, 1000);
   }
 
   reiniciarJuego() { this.comenzarJuego(); }
   abrirModalSalir() { this.mostrarModalSalir.set(true); }
-  confirmarSalir() {
-    this.mostrarModalSalir.set(false);
-    this.pantalla.set('inicio');
-  }
-  cancelarSalir() { this.mostrarModalSalir.set(false); }
 }

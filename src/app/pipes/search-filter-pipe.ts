@@ -35,7 +35,6 @@ export class SearchFilterPipe implements PipeTransform {
         return false;
       }
 
-      // fallback: revisar propiedades top-level y objetos anidados 1 nivel
       for (const k of Object.keys(item)) {
         const v = item[k];
         if (v == null) continue;

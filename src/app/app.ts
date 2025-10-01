@@ -5,6 +5,7 @@ import { Footer } from './components/footer/footer';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { SearchFilterPipe } from './pipes/search-filter-pipe';
+import { InactivityService } from './services/inactivity-service';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { SearchFilterPipe } from './pipes/search-filter-pipe';
 export class App {
   mostrarNavFooter = false;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private inactivity: InactivityService) {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {

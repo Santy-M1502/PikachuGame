@@ -1,14 +1,14 @@
 .quiz-container{
     text-align: center;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-image: url('../../../assets/preguntados/fondoPreguntados.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background-image: url('../../../assets/preguntados/fondoPreguntados.jpg');
+background-repeat: no-repeat;
+background-size: cover;
+background-position: center;
 }
 
 .quiz-start, .quiz-game, .quiz-end{
@@ -140,6 +140,79 @@
     border-radius: 6px;
     cursor: pointer;
 }
+
+button {
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: none;
+    background-color: #f5a623;
+    margin-top: 1rem;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.quiz-end{
+    text-shadow: 0px 0px 20px #fff;
+    background-color: #333b;
+}
+.respuesta-correcta {
+  background-color: #4caf50 !important; /* verde */
+  color: white;
+}
+
+.respuesta-incorrecta {
+  background-color: #f44336 !important; /* rojo */
+  color: white;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal {
+  background: white;
+  color: black;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 350px;
+  text-align: center;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.modal-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.modal-actions button:first-child {
+  background: #e74c3c;
+  color: white;
+}
+
+.modal-actions button:last-child {
+  background: #3498db;
+  color: white;
+}
+
 
 @media (max-width: 600px){
     .quiz-start, .quiz-game, .quiz-end{

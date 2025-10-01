@@ -39,7 +39,7 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
   private resolveFn: ((value: boolean) => void) | null = null;
 
   mostrarModalSalir = false;
-  juegoEnCurso = false; // <- bandera para saber si está en partida
+  juegoEnCurso = false;
 
   constructor(
     private apiService: PokemonService,
@@ -56,7 +56,6 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
     clearInterval(this.timerInterval);
   }
 
-  // ⚡ Captura cuando cierran la pestaña o recargan
   @HostListener('window:beforeunload', ['$event'])
   unloadHandler(event: BeforeUnloadEvent) {
     if (this.juegoEnCurso && this.intentos > 0 && this.pantalla === 'juego') {
@@ -65,12 +64,10 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
     }
   }
 
-  // ⚡ Se usa con el guard de rutas
   canDeactivate(): boolean | Promise<boolean> {
     if (this.juegoEnCurso && this.intentos > 0 && this.pantalla === 'juego') {
       this.mostrarModalSalir = true;
 
-      // devolvemos un Promise y guardamos el resolve
       return new Promise<boolean>((resolve) => {
         this.resolveFn = resolve;
       });
@@ -78,7 +75,6 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
     return true;
   }
 
-  // Inicializamos el juego en la DB
   async initJuego() {
     try {
       let juegos = await this.supabaseService.getJuegoPorNombre('Ahorcado');
@@ -177,7 +173,7 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
   private finalizarJuego() {
     clearInterval(this.timerInterval);
     this.tiempoTranscurrido.set(Math.floor((Date.now() - this.tiempoInicio) / 1000));
-    this.juegoEnCurso = false; // ya terminó la partida
+    this.juegoEnCurso = false;
     this.guardarPuntaje();
   }
 

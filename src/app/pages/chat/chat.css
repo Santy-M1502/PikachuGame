@@ -89,6 +89,38 @@
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
+.name{
+  font-weight: 600;
+}
+
+.meta{
+  background:  linear-gradient(to left, #ffffff22, #33333366);
+  padding: 2px;
+}
+
+.bubble{
+  margin: .3rem 0;
+  border-bottom: 2px solid #333;
+}
+
+.mio{
+  text-align: end;
+}
+
+.mio, .otro{
+  padding: .5rem;
+}
+
+.mio:hover{
+  background-color: #e63946;
+  color: #ff9400;
+}
+
+.otro:hover{
+  background-color: #eda33b;
+  color: #e63946;
+}
+
 .btn-send:hover {
   background-color: #d32f2f;
   transform: scale(1.05);

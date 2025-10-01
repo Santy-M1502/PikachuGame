@@ -1,4 +1,6 @@
 import { Injectable, signal } from '@angular/core';
+import { SupabaseService } from './superbase.service';
+import { supabase } from '../../supabase.config';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -34,6 +36,24 @@ export class AuthService {
   getToken(): string | null {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('token');
+    }
+    return null;
+  }
+
+  async getUser(id: string) {
+    const { data, error } = await supabase
+      .from('usuarios')
+      .select('*')
+      .eq('id', id)
+      .single();    
+
+    if (error) throw error;
+    return data;
+  }
+
+  getUserId(): string | null {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('user_id');
     }
     return null;
   }

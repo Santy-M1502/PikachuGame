@@ -1,12 +1,14 @@
 <div class="quiz-container">
 
-  <div *ngIf="pantalla() === 'inicio'" class="quiz-start">
+  @if(pantalla() === 'inicio'){
+  <div class="quiz-start">
     <h1>Preguntados Pokémon</h1>
     <button (click)="comenzarJuego()">Comenzar</button>
   </div>
+  }
 
-  <!-- Pantalla del juego: solo si ya cargaron preguntas -->
-  <div *ngIf="pantalla() === 'juego' && preguntas().length" class="quiz-game">
+  @if(pantalla() === 'juego' && preguntas().length){
+  <div class="quiz-game">
     <p>Tiempo: {{ tiempoTranscurrido() }}s</p>
     <div class="quiz-stats-panel">
       <p>Pregunta: {{ numeroPregunta() + 1 }} / {{ totalPreguntas }}</p>
@@ -20,29 +22,33 @@
     </div>
 
     <div class="quiz-options">
-      <button
-        *ngFor="let opcion of preguntaActual.opciones"
-        (click)="responder(opcion)"
-        [disabled]="respuestaSeleccionada()">
+      @for(opcion of preguntaActual.opciones; track $index){
+      <button (click)="responder(opcion)" [disabled]="respuestaSeleccionada()" [respuestaEstado]="getEstadoRespuesta(opcion)">
         {{ opcion }}
       </button>
+      }
     </div>
   </div>
+  }
 
-  <!-- Mensaje de carga -->
-  <div *ngIf="pantalla() === 'juego' && !preguntas().length">
+  @if(pantalla() === 'juego' && !preguntas().length){
+  <div>
     <p>Cargando preguntas...</p>
   </div>
+  }
 
-  <div *ngIf="pantalla() === 'fin'" class="quiz-end">
-    <h2 *ngIf="gano()">¡Felicidades! Has completado el quiz</h2>
-    <h2 *ngIf="!gano()">Juego Terminado</h2>
+  @if(pantalla() === 'fin'){
+  <div class="quiz-end">
+    @if(gano()){<h2>¡Felicidades! Has completado el quiz</h2>}
+    @if(!gano()){<h2>Juego Terminado</h2>}
     <p>Tiempo: {{ tiempoTranscurrido() }}s</p>
     <p>Respuestas correctas: {{ puntaje() }} / {{ totalPreguntas }}</p>
     <button (click)="reiniciarJuego()">Jugar de nuevo</button>
   </div>
+  }
 
-  <div class="modal-overlay" *ngIf="mostrarModalSalir()">
+  @if(mostrarModalSalir()){
+  <div class="modal-overlay">
     <div class="modal">
       <h3>¿Seguro que querés salir?</h3>
       <div class="modal-actions">
@@ -51,5 +57,19 @@
       </div>
     </div>
   </div>
+  }
+
+  @if(mostrarModalSalir()){
+    <div class="modal-overlay">
+      <div class="modal">
+        <h3>¿Seguro que querés salir?</h3>
+        <p>Si salís, vas a perder el puntaje actual.</p>
+        <div class="modal-actions">
+          <button (click)="confirmarSalir()">Sí, salir</button>
+          <button (click)="cancelarSalir()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  }
 
 </div>

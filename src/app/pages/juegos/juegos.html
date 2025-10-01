@@ -24,8 +24,10 @@
     </button>
   </div>
 
-  <div class="login-message" *ngIf="showMessage()">
+  @if(showMessage()){
+  <div class="login-message">
     🔒 Debes iniciar sesión para jugar
   </div>
+  }
 </div>
 <app-chat-button></app-chat-button>

@@ -1,8 +1,10 @@
-import { Component, OnInit, signal, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, OnInit, signal, PLATFORM_ID, Inject, OnDestroy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '../../services/superbase.service';
 import { supabase } from '../../../supabase.config';
+import { CanComponentDeactivate } from '../../guards/can-deactivate-guard';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-mayor-omenor',
@@ -11,7 +13,7 @@ import { supabase } from '../../../supabase.config';
   templateUrl: './mayor-omenor.html',
   styleUrls: ['./mayor-omenor.css']
 })
-export class MayorOmenor implements OnInit {
+export class MayorOmenor implements OnInit, OnDestroy, CanComponentDeactivate {
   cartas = [
     { rayo: { as:{valor:1, nombre:'As', imagen:'assets/cartasNaipes/Amarillo1.png'},
               dos:{valor:2, nombre:'Dos', imagen:'assets/cartasNaipes/Amarillo2.png'},
@@ -76,8 +78,48 @@ export class MayorOmenor implements OnInit {
   tiempoTranscurrido = signal(0);
   timerInterval: any;
 
+  mostrarModalSalir = false;
+  juegoEnCurso = false;
+  private resolveFn: ((value: boolean) => void) | null = null;
+
+
+   @HostListener('window:beforeunload', ['$event'])
+    unloadHandler(event: BeforeUnloadEvent) {
+      if (this.juegoEnCurso && this.pantalla === 'juego') {
+        event.preventDefault();
+        event.returnValue = 'Si salís, vas a perder el puntaje actual.';
+      }
+    }
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object,
               private supabaseService: SupabaseService) {}
+
+  canDeactivate(): boolean | Promise<boolean> {
+    if (this.juegoEnCurso && this.pantalla === 'juego') {
+      this.mostrarModalSalir = true;
+      return new Promise<boolean>((resolve) => {
+        this.resolveFn = resolve;
+      });
+    }
+    return true;
+  }
+
+  confirmarSalir() {
+    this.mostrarModalSalir = false;
+    this.finalizarJuego();
+    if (this.resolveFn) {
+      this.resolveFn(true);
+      this.resolveFn = null;
+    }
+  }
+
+  cancelarSalir() {
+    this.mostrarModalSalir = false;
+    if (this.resolveFn) {
+      this.resolveFn(false);
+      this.resolveFn = null;
+    }
+  }
 
   getRandomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -102,6 +144,7 @@ export class MayorOmenor implements OnInit {
   }
 
   comenzarJuego() {
+    this.juegoEnCurso = true;
     this.puntos.set(0);
     this.resultado.set('');
     this.cartasUsadas = [];

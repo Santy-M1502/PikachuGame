@@ -3,13 +3,21 @@ import { Login } from './pages/login/login';
 import { AuthGuard } from './guards/auth.guard-guard';
 import { canDeactivateGuard } from './guards/can-deactivate-guard';
 import { NotFound } from './pages/not-found/not-found';
+import { LoginGuard } from './guards/login-guard';
+import { RoleGuard } from './guards/role-guard-guard';
+import { AgeGuard } from './guards/age-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'bienvenida', pathMatch: 'full' },
-  { path: 'login', component: Login },
+  { 
+    path: 'login', 
+    component: Login , 
+    canActivate: [LoginGuard]
+  },
   {
     path: 'register',
-    loadComponent: () => import('./pages/register/register').then(m => m.Register)
+    loadComponent: () => import('./pages/register/register').then(m => m.Register),
+    canActivate: [LoginGuard]
   },
   {
     path: 'bienvenida',
@@ -18,7 +26,7 @@ export const routes: Routes = [
   {
     path: 'quien-soy',
     loadComponent: () => import('./pages/quien-soy/quien-soy').then(m => m.QuienSoy),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, AgeGuard]
   },
   {
     path: 'juegos',
@@ -58,6 +66,11 @@ export const routes: Routes = [
     path: 'chat',
     loadComponent: () => import('./pages/chat/chat').then(m => m.Chat),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'admin-home',
+    loadComponent: () => import('./pages/admin-home/admin-home').then(m => m.AdminHome),
+    canActivate: [AuthGuard, RoleGuard]
   },
   { path: '**', component: NotFound }
 ];

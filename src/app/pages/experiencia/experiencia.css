@@ -8,8 +8,8 @@
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: 'Arial', sans-serif;
-    width: 95%;
-    max-width: 1200px;
+    width: 100%;
+    min-height: 100dvh;
     margin: 0 auto;
     padding: 100px 20px 40px 20px;
     box-sizing: border-box;

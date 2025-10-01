@@ -18,7 +18,7 @@
       <img [src]="usuario.avatar_url" alt="Foto de perfil">
       <h2>{{ usuario.name }}</h2>
       <p><strong>Usuario:</strong> {{ usuario.login }}</p>
-      <p *ngIf="usuario.location"><strong>Ubicación:</strong> {{ usuario.location }}</p>
+      @if(usuario.location){<p><strong>Ubicación:</strong> {{ usuario.location }}</p>}
       <p><strong>Repositorios públicos:</strong> {{ usuario.public_repos }}</p>
     </div>
 
