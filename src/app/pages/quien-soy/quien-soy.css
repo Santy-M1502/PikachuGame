@@ -1,17 +1,15 @@
 .quien-soy-container {
-  padding: 40px;
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   background-image: url('/assets/background.png');
   background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: #4F200D;
-  min-height: calc(100dvh - 80px);
+  min-height: 100dvh;
   text-align: center;
+  min-width: 100dvw;
 }
 
-.loading, .error{
+.loading, .error {
   height: 100dvh;
   font-size: 5rem;
   text-align: center;
@@ -19,6 +17,14 @@
 
 .perfil{
   margin-top: 40px;
+}
+
+.card {
+  border-radius: 12px;
+}
+
+.card-title {
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.25);
 }
 
 .perfil, .explicacion-juego{

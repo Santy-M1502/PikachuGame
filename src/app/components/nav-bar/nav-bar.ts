@@ -4,11 +4,12 @@ import { RouterModule, Router } from '@angular/router';
 import { SupabaseService } from '../../services/superbase.service';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { ChatButton } from "../chat-button/chat-button";
 
 @Component({
   selector: 'app-nav-bar',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ChatButton],
   templateUrl: './nav-bar.html',
   styleUrls: ['./nav-bar.css']
 })

@@ -1,29 +1,38 @@
-<nav class="navbar">
-  <div class="navbar-brand">
-    <div class="title-menu">
-      <h1><a routerLink="/bienvenida">Pikachu Games ⚡</a></h1>
-      <button class="menu-toggle" (click)="toggleMenu()">☰</button>
+<nav class="navbar navbar-expand-lg shadow-sm py-2" style="background: linear-gradient(90deg, #ffcb05 0%, #f5b700 100%); border-bottom: 2px solid #f2a900;">
+  <div class="container-fluid">
+    <!-- Marca -->
+    <a class="navbar-brand fw-bold text-dark d-flex align-items-center" routerLink="/bienvenida">
+      <h1 class="m-0 fs-4 text-dark">Pikachu Games ⚡</h1>
+    </a>
+
+    <!-- Botón toggle (modo móvil) -->
+    <button class="navbar-toggler border-0" type="button" (click)="toggleMenu()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Links -->
+    <div class="collapse navbar-collapse" [class.show]="menuOpen">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link fw-bold text-dark" routerLink="/juegos">Juegos</a></li>
+        <li class="nav-item"><a class="nav-link fw-bold text-dark" routerLink="/registro">Experiencia</a></li>
+        <li class="nav-item"><a class="nav-link fw-bold text-dark" routerLink="/chat">Chat en vivo</a></li>
+        <li class="nav-item"><a class="nav-link fw-bold text-dark" routerLink="/quien-soy">Sobre Mi</a></li>
+
+        @if(authService.isLoggedIn()){
+          <li class="nav-item">
+            <button class="btn btn-danger ms-2" (click)="logout()">Cerrar sesión</button>
+          </li>
+        }
+
+        @if(!authService.isLoggedIn()){
+          <li class="nav-item">
+            <a routerLink="/login" class="btn btn-danger ms-2">Login</a>
+          </li>
+          <li class="nav-item">
+            <a routerLink="/register" class="btn btn-dark ms-2">Register</a>
+          </li>
+        }
+      </ul>
     </div>
   </div>
-  <ul class="navbar-links" [class.active]="menuOpen">
-    <li><a routerLink="/juegos">Juegos</a></li>
-    <li><a routerLink="/registro">Experiencia</a></li>
-    <li><a routerLink="/chat">Chat en vivo</a></li>
-    <li><a routerLink="/quien-soy">Sobre Mi</a></li>
-    @if(authService.isLoggedIn()){
-      <li>
-        <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
-      </li>
-    }
-    @if(!authService.isLoggedIn()){
-      <li>
-        <a routerLink="/login" class="login">Login</a>
-      </li>
-    }
-    @if(!authService.isLoggedIn()){
-      <li>
-        <a routerLink="/register" class="register">Register</a>
-      </li>
-    }
-  </ul>
 </nav>
