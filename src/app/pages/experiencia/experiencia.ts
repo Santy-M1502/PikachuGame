@@ -1,4 +1,3 @@
-// src/app/pages/ranking/ranking.component.ts
 import { Component, signal, computed, OnInit } from '@angular/core';
 import { SupabaseService, Puntaje, Juego } from '../../services/superbase.service';
 import { NavBar } from "../../components/nav-bar/nav-bar";
