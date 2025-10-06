@@ -41,14 +41,16 @@
   </div>
   }
 
-  @if (mostrarModalSalir) {
-    <div class="modal-overlay">
-      <div class="modal">
-        <h3>¿Seguro que querés salir?</h3>
-        <p>Si salís, vas a perder el puntaje actual.</p>
-        <div class="modal-actions">
-          <button (click)="confirmarSalir()">Sí, salir</button>
-          <button (click)="cancelarSalir()">Cancelar</button>
+   @if (mostrarModalSalir) {
+    <div class="modal fade show d-block salir" tabindex="-1" style="background: rgba(0,0,0,0.6);">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-3">
+          <h3>¿Seguro que querés salir?</h3>
+          <p>Si salís, vas a perder el puntaje actual.</p>
+          <div class="d-flex justify-content-between mt-3">
+            <button class="btn btn-danger px-3" (click)="confirmarSalir()">Sí, salir</button>
+            <button class="btn btn-primary px-3" (click)="cancelarSalir()">Cancelar</button>
+          </div>
         </div>
       </div>
     </div>

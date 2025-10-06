@@ -130,50 +130,73 @@ button {
     transition: all 0.2s;
 }
 
-.modal-overlay {
+.quiz-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.65);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
+  z-index: 9999;
 }
 
-.modal {
-  background: white;
-  color: black;
-  padding: 20px;
+.quiz-modal {
+  background: #fff;
+  color: #222;
   border-radius: 12px;
-  max-width: 350px;
+  padding: 25px 30px;
+  width: 90%;
+  max-width: 380px;
   text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border: 3px solid #f5a623;
 }
 
-.modal-actions {
+.quiz-modal h3 {
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+}
+
+.quiz-modal p {
+  margin-bottom: 20px;
+  font-size: 1rem;
+  color: #444;
+}
+
+.quiz-modal-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
+  gap: 10px;
 }
 
-.modal-actions button {
-  padding: 8px 16px;
+.quiz-modal-actions button {
+  flex: 1;
+  padding: 10px 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.15s;
 }
 
-.modal-actions button:first-child {
-  background: #e74c3c;
+.quiz-btn-salir {
+  background-color: #e74c3c;
   color: white;
 }
 
-.modal-actions button:last-child {
-  background: #3498db;
+.quiz-btn-cancelar {
+  background-color: #3498db;
   color: white;
 }
+
+.quiz-modal-actions button:hover {
+  transform: scale(1.05);
+}
+
 
 @media(max-width: 600px){
   .tv-screen {

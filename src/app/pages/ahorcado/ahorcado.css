@@ -1,76 +1,78 @@
-.container{
-    text-align: center;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-image: url('../../../assets/ahorcado/Fondo1.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+.ahorcado-container {
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url('../../../assets/ahorcado/Fondo1.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  min-width: 100dvw;
 }
 
-.palabra {
+.ahorcado-palabra {
   font-size: 2rem;
   letter-spacing: 0.5rem;
   font-weight: bold;
   margin: 20px 0;
 }
 
-.bienvenida{
-    background-color: rgba(255, 255, 255, 0.5);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 50dvw;
+.ahorcado-bienvenida {
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 50dvw;
 }
 
-button {
-    padding: 12px 25px;
-    border-radius: 8px;
-    border: none;
-    background-color: #f5a623;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.2s;
+.ahorcado-btn {
+  padding: 12px 25px;
+  border-radius: 8px;
+  border: none;
+  background-color: #f5a623;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
 }
 
-button:hover {
-    background-color: #e08e1a;
-    transform: scale(1.05);
+.ahorcado-btn:hover {
+  background-color: #e08e1a;
+  transform: scale(1.05);
 }
 
-.info{
-    padding: 30px 10px;
+.ahorcado-info {
+  padding: 30px 10px;
 }
 
-.info img{
-    height: 200px;
-    width: auto;
-    background-color: rgba(0, 0, 0, 0.1);
+.ahorcado-info img {
+  height: 200px;
+  width: auto;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
-.text-container, .info h2{
+.ahorcado-text-container, 
+.ahorcado-info h2 {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-.final {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    background-color: rgba(255, 255, 255, 0.5);
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 50dvw;
+.ahorcado-final {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 50dvw;
 }
 
-.game{
+.ahorcado-game {
   margin-top: 3rem;
   height: 70dvh;
   display: flex;
@@ -78,7 +80,7 @@ button:hover {
   gap: 15px;
 }
 
-.teclado {
+.ahorcado-teclado {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
@@ -89,7 +91,7 @@ button:hover {
   border-radius: 10px;
 }
 
-.teclado button {
+.ahorcado-tecla {
   padding: 10px;
   min-width: 35px;
   background: linear-gradient(60deg, #e1dfdf, #aeadad);
@@ -101,12 +103,12 @@ button:hover {
   color: #333;
 }
 
-.teclado button:hover:not(:disabled) {
+.ahorcado-tecla:hover:not(:disabled) {
   transform: scale(1.1);
   background: #ddd;
 }
 
-.teclado button:disabled {
+.ahorcado-tecla:disabled {
   background: linear-gradient(60deg, #213131, #314141);
   color: #bbb;
   cursor: none;        
@@ -114,7 +116,7 @@ button:hover {
   opacity: 0.8;        
 }
 
-.modal-overlay {
+.ahorcado-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -127,7 +129,7 @@ button:hover {
   z-index: 2000;
 }
 
-.modal {
+.ahorcado-modal {
   background: white;
   color: black;
   padding: 20px;
@@ -136,31 +138,24 @@ button:hover {
   text-align: center;
 }
 
-.modal-actions {
+.ahorcado-modal-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 15px;
 }
 
-.modal-actions button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.modal-actions button:first-child {
+.ahorcado-btn-salir {
   background: #e74c3c;
   color: white;
 }
 
-.modal-actions button:last-child {
+.ahorcado-btn-cancelar {
   background: #3498db;
   color: white;
 }
 
-@media (max-width: 600px){
-  .game{
+@media (max-width: 600px) {
+  .ahorcado-game {
     height: 100dvh;
     display: flex;
     flex-direction: column;
@@ -168,7 +163,7 @@ button:hover {
     gap: 15px;
   }
 
-  .game img{
+  .ahorcado-game img {
     width: 100dvw;
   }
 }

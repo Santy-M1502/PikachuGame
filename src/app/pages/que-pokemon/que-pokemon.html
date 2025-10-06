@@ -55,13 +55,13 @@
   }
 
   @if(mostrarModalSalir()){
-    <div class="modal-overlay">
-      <div class="modal">
+    <div class="quiz-modal-overlay">
+      <div class="quiz-modal">
         <h3>¿Seguro que querés salir?</h3>
         <p>Si salís, vas a perder el puntaje actual.</p>
-        <div class="modal-actions">
-          <button (click)="confirmarSalir()">Sí, salir</button>
-          <button (click)="cancelarSalir()">Cancelar</button>
+        <div class="quiz-modal-actions">
+          <button class="quiz-btn-salir" (click)="confirmarSalir()">Sí, salir</button>
+          <button class="quiz-btn-cancelar" (click)="cancelarSalir()">Cancelar</button>
         </div>
       </div>
     </div>

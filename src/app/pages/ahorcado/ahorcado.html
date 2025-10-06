@@ -1,33 +1,34 @@
-<div class="container">
+<div class="ahorcado-container">
   @if (pantalla === 'inicio') {
-    <div class="bienvenida">
+    <div class="ahorcado-bienvenida">
       <h1>Ahorcado</h1>
       <p>¡Bienvenido al juego del Ahorcado!</p>
-      <p>Intenta adivinar el nombre del pokemon antes de que se acaben tus intentos.</p>
-      <button (click)="comenzarJuego()">Empezar</button>
+      <p>Intenta adivinar el nombre del Pokémon antes de que se acaben tus intentos.</p>
+      <button class="ahorcado-btn" (click)="comenzarJuego()">Empezar</button>
     </div>
   }
 
   @if (pantalla === 'juego') {
-    <div class="game">
-      <div class="info">
-        <h2>Adivina el Pokemon</h2>
+    <div class="ahorcado-game">
+      <div class="ahorcado-info">
+        <h2>Adivina el Pokémon</h2>
         <img [src]="horca" alt="Horca">
-        <div class="text-container">
+        <div class="ahorcado-text-container">
           <p>Letras Usadas: {{ adivinados.join(', ') }}</p>
           <p>Intentos: {{ intentos }}</p>
           <p>Tiempo: {{ tiempoTranscurrido() }} s</p>
-          <p class="palabra">{{ palabraMostrada }}</p>
+          <p class="ahorcado-palabra">{{ palabraMostrada }}</p>
           @if (palabraSecreta) {
             <p>Cantidad de letras: {{ palabraSecreta.length }}</p>
           }
         </div>
       </div>
 
-      <div class="game-area">
-        <div class="teclado">
+      <div class="ahorcado-game-area">
+        <div class="ahorcado-teclado">
           @for (letra of letras; track $index) {
             <button 
+              class="ahorcado-tecla"
               (click)="adivinar(letra)" 
               [disabled]="adivinados.includes(letra.toLowerCase() || letra.toUpperCase()) || gano || intentos === 0">
               {{ letra }}
@@ -39,7 +40,7 @@
   }
 
   @if (pantalla === 'fin') {
-    <div class="final">
+    <div class="ahorcado-final">
       @if (gano) {
         <h2>¡Felicidades! Has adivinado {{ palabraSecreta | uppercase }}</h2>
         <img [src]="selectedPokemon?.sprites?.front_default" alt="Pokemon">
@@ -47,23 +48,23 @@
       @else {
         <h2>Juego Terminado</h2>
         <div>
-          <p>El pokemon era: {{ palabraSecreta | uppercase }}</p>
+          <p>El Pokémon era: {{ palabraSecreta | uppercase }}</p>
           <img [src]="selectedPokemon?.sprites?.front_default" alt="Pokemon">
         </div>
       }
 
-      <button (click)="reiniciarJuego()">Jugar de nuevo</button>
+      <button class="ahorcado-btn" (click)="reiniciarJuego()">Jugar de nuevo</button>
     </div>
   }
 
   @if (mostrarModalSalir) {
-    <div class="modal-overlay">
-      <div class="modal">
+    <div class="ahorcado-modal-overlay">
+      <div class="ahorcado-modal">
         <h3>¿Seguro que querés salir?</h3>
         <p>Si salís, vas a perder el puntaje actual.</p>
-        <div class="modal-actions">
-          <button (click)="confirmarSalir()">Sí, salir</button>
-          <button (click)="cancelarSalir()">Cancelar</button>
+        <div class="ahorcado-modal-actions">
+          <button class="ahorcado-btn-salir" (click)="confirmarSalir()">Sí, salir</button>
+          <button class="ahorcado-btn-cancelar" (click)="cancelarSalir()">Cancelar</button>
         </div>
       </div>
     </div>

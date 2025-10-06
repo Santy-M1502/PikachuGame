@@ -1,72 +1,61 @@
 <div class="quiz-container">
 
   @if(pantalla() === 'inicio'){
-  <div class="quiz-start">
-    <h1>Preguntados Pokémon</h1>
-    <button (click)="comenzarJuego()">Comenzar</button>
-  </div>
+    <div class="quiz-start">
+      <h1>Preguntados Pokémon</h1>
+      <button (click)="comenzarJuego()">Comenzar</button>
+    </div>
   }
 
   @if(pantalla() === 'juego' && preguntas().length){
-  <div class="quiz-game">
-    <p>Tiempo: {{ tiempoTranscurrido() }}s</p>
-    <div class="quiz-stats-panel">
-      <p>Pregunta: {{ numeroPregunta() + 1 }} / {{ totalPreguntas }}</p>
-      <p>Puntaje: {{ puntaje() }}</p>
-      <p>Intentos restantes: {{ intentos() }}</p>
-      <button (click)="abrirModalSalir()">Salir</button>
-    </div>
+    <div class="quiz-game">
+      <p>Tiempo: {{ tiempoTranscurrido() }}s</p>
+      <div class="quiz-stats-panel">
+        <p>Pregunta: {{ numeroPregunta() + 1 }} / {{ totalPreguntas }}</p>
+        <p>Puntaje: {{ puntaje() }}</p>
+        <p>Intentos restantes: {{ intentos() }}</p>
+        <button (click)="abrirModalSalir()">Salir</button>
+      </div>
 
-    <div class="quiz-question-box">
-      <p>{{ preguntaActual.pregunta }}</p>
-    </div>
+      <div class="quiz-question-box">
+        <p>{{ preguntaActual.pregunta }}</p>
+      </div>
 
-    <div class="quiz-options">
-      @for(opcion of preguntaActual.opciones; track $index){
-      <button (click)="responder(opcion)" [disabled]="respuestaSeleccionada()" [respuestaEstado]="getEstadoRespuesta(opcion)">
-        {{ opcion }}
-      </button>
-      }
+      <div class="quiz-options">
+        @for(opcion of preguntaActual.opciones; track $index){
+          <button (click)="responder(opcion)" [disabled]="respuestaSeleccionada()" [respuestaEstado]="getEstadoRespuesta(opcion)">
+            {{ opcion }}
+          </button>
+        }
+      </div>
     </div>
-  </div>
   }
 
   @if(pantalla() === 'juego' && !preguntas().length){
-  <div>
-    <p>Cargando preguntas...</p>
-  </div>
+    <div>
+      <p>Cargando preguntas...</p>
+    </div>
   }
 
   @if(pantalla() === 'fin'){
-  <div class="quiz-end">
-    @if(gano()){<h2>¡Felicidades! Has completado el quiz</h2>}
-    @if(!gano()){<h2>Juego Terminado</h2>}
-    <p>Tiempo: {{ tiempoTranscurrido() }}s</p>
-    <p>Respuestas correctas: {{ puntaje() }} / {{ totalPreguntas }}</p>
-    <button (click)="reiniciarJuego()">Jugar de nuevo</button>
-  </div>
-  }
-
-  @if(mostrarModalSalir()){
-  <div class="modal-overlay">
-    <div class="modal">
-      <h3>¿Seguro que querés salir?</h3>
-      <div class="modal-actions">
-        <button (click)="confirmarSalir()">Sí, salir</button>
-        <button (click)="cancelarSalir()">Cancelar</button>
-      </div>
+    <div class="quiz-end">
+      @if(gano()){<h2>¡Felicidades! Has completado el quiz</h2>}
+      @if(!gano()){<h2>Juego Terminado</h2>}
+      <p>Tiempo: {{ tiempoTranscurrido() }}s</p>
+      <p>Respuestas correctas: {{ puntaje() }} / {{ totalPreguntas }}</p>
+      <button (click)="reiniciarJuego()">Jugar de nuevo</button>
     </div>
-  </div>
   }
 
+  <!-- Modal Salir -->
   @if(mostrarModalSalir()){
-    <div class="modal-overlay">
-      <div class="modal">
+    <div class="quiz-modal-overlay">
+      <div class="quiz-modal">
         <h3>¿Seguro que querés salir?</h3>
         <p>Si salís, vas a perder el puntaje actual.</p>
-        <div class="modal-actions">
-          <button (click)="confirmarSalir()">Sí, salir</button>
-          <button (click)="cancelarSalir()">Cancelar</button>
+        <div class="quiz-modal-actions">
+          <button class="quiz-btn-salir" (click)="confirmarSalir()">Sí, salir</button>
+          <button class="quiz-btn-cancelar" (click)="cancelarSalir()">Cancelar</button>
         </div>
       </div>
     </div>

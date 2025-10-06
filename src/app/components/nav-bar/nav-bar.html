@@ -1,17 +1,15 @@
-<nav class="navbar navbar-expand-lg shadow-sm py-2" style="background: linear-gradient(90deg, #ffcb05 0%, #f5b700 100%); border-bottom: 2px solid #f2a900;">
+<nav class="navbar-pikachu navbar navbar-expand-lg shadow-sm py-2" 
+     style="background: linear-gradient(90deg, #ffcb05 0%, #f5b700 100%); border-bottom: 2px solid #f2a900;">
   <div class="container-fluid">
-    <!-- Marca -->
     <a class="navbar-brand fw-bold text-dark d-flex align-items-center" routerLink="/bienvenida">
       <h1 class="m-0 fs-4 text-dark">Pikachu Games ⚡</h1>
     </a>
 
-    <!-- Botón toggle (modo móvil) -->
-    <button class="navbar-toggler border-0" type="button" (click)="toggleMenu()">
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menuPikachu">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Links -->
-    <div class="collapse navbar-collapse" [class.show]="menuOpen">
+    <div class="collapse navbar-collapse" id="menuPikachu">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item"><a class="nav-link fw-bold text-dark" routerLink="/juegos">Juegos</a></li>
         <li class="nav-item"><a class="nav-link fw-bold text-dark" routerLink="/registro">Experiencia</a></li>
