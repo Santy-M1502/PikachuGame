@@ -1,4 +1,3 @@
-// src/app/pipes/search-filter.pipe.ts
 import { Pipe, PipeTransform } from '@angular/core';
 
 function getByPath(obj: any, path: string) {
@@ -9,7 +8,7 @@ function normalizeString(str: any) {
   if (str === null || str === undefined) return '';
   return String(str)
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // quita acentos
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
 }
 

@@ -29,7 +29,6 @@ export class Experiencia implements OnInit {
   puntajes = signal<Puntaje[]>([]);
   loading = signal(false);
 
-  // búsqueda/filtrado cliente
   searchTerm = signal('');
   private debounceId: any = null;
 

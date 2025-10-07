@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Injectable({ providedIn: 'root' })
 export class InactivityService {
   private timeout: any;
-  private readonly INACTIVITY_TIME = 5 * 60 * 1000; // 5 minutos
+  private readonly INACTIVITY_TIME = 5 * 60 * 1000;
   private isBrowser: boolean;
 
   constructor(

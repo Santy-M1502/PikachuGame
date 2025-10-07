@@ -3,6 +3,8 @@ import { Component, signal, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CanComponentDeactivate } from '../../guards/can-deactivate-guard';
 import { HostListener } from '@angular/core';
+import { SupabaseService } from '../../services/superbase.service';
+import { supabase } from '../../../supabase.config';
 
 @Component({
   selector: 'app-que-pokemon',
@@ -25,6 +27,8 @@ export class QuePokemon implements OnDestroy, CanComponentDeactivate  {
   opciones = signal<string[]>([]);
   resultado = signal('');
   botonesHabilitados = signal(true);
+
+  constructor(private supabaseService: SupabaseService) {}
 
   @HostListener('window:beforeunload', ['$event'])
   unloadHandler(event: BeforeUnloadEvent) {
@@ -98,6 +102,41 @@ export class QuePokemon implements OnDestroy, CanComponentDeactivate  {
     this.pantalla.set('inicio');
   }
 
+  async guardarPuntaje() {
+    const { data: userData } = await supabase.auth.getUser();
+    const auth_id = userData.user?.id;
+
+    if (!auth_id) {
+      console.error('Usuario no logueado');
+      return;
+    }
+
+    const { data: usuario } = await supabase
+      .from('usuarios')
+      .select('id')
+      .eq('auth_id', auth_id)
+      .single();
+
+    if (!usuario) {
+      console.error('Usuario no encontrado en tabla "usuarios"');
+      return;
+    }
+
+    const puntos = this.puntos();
+    const tiempo = this.tiempo();
+
+    try {
+      await this.supabaseService.crearPuntaje({
+        juego_id: 4, 
+        puntos,
+        tiempo,
+        user_id: usuario.id
+      });
+      console.log('✅ Puntaje guardado correctamente');
+    } catch (error) {
+      console.error('Error guardando puntaje:', error);
+    }
+  }
 
   nuevoPokemon() {
     const indice = Math.floor(Math.random() * this.pokemons.length);
@@ -144,6 +183,7 @@ export class QuePokemon implements OnDestroy, CanComponentDeactivate  {
       setTimeout(() => this.nuevoPokemon(), 1000);
     } else {
       this.resultado.set(`Incorrecto. Era ${seleccionado.nombre}`);
+      this.guardarPuntaje();
       setTimeout(() => this.pantalla.set('fin'), 1000);
     }
   }
