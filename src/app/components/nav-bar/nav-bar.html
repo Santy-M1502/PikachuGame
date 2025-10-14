@@ -1,5 +1,7 @@
-<nav class="navbar-pikachu navbar navbar-expand-lg shadow-sm py-2" 
-     style="background: linear-gradient(90deg, #ffcb05 0%, #f5b700 100%); border-bottom: 2px solid #f2a900;">
+<nav
+  class="navbar-pikachu navbar navbar-expand-lg shadow-sm py-2"
+  style="background: linear-gradient(90deg, #ffcb05 0%, #f5b700 100%); border-bottom: 2px solid #f2a900;"
+>
   <div class="container-fluid">
     <a class="navbar-brand fw-bold text-dark d-flex align-items-center" routerLink="/bienvenida">
       <h1 class="m-0 fs-4 text-dark">Pikachu Games ⚡</h1>
@@ -11,25 +13,40 @@
 
     <div class="collapse navbar-collapse" id="menuPikachu">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link fw-bold text-dark" routerLink="/juegos">Juegos</a></li>
-        <li class="nav-item"><a class="nav-link fw-bold text-dark" routerLink="/registro">Experiencia</a></li>
-        <li class="nav-item"><a class="nav-link fw-bold text-dark" routerLink="/chat">Chat en vivo</a></li>
-        <li class="nav-item"><a class="nav-link fw-bold text-dark" routerLink="/quien-soy">Sobre Mi</a></li>
+        <li class="nav-item">
+          <a class="nav-link fw-bold text-dark" routerLink="/juegos">Juegos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-bold text-dark" routerLink="/registro">Experiencia</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-bold text-dark" routerLink="/chat">Chat en vivo</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-bold text-dark" routerLink="/encuesta">Encuesta</a>
+        </li>
 
-        @if(authService.isLoggedIn()){
-          <li class="nav-item">
-            <button class="btn btn-danger ms-2" (click)="logout()">Cerrar sesión</button>
-          </li>
-        }
+        <!-- Link visible solo para admin -->
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link fw-bold text-dark" routerLink="/resultado-encuestas">Resultado Encuestas</a>
+        </li>
 
-        @if(!authService.isLoggedIn()){
-          <li class="nav-item">
-            <a routerLink="/login" class="btn btn-danger ms-2">Login</a>
-          </li>
-          <li class="nav-item">
-            <a routerLink="/register" class="btn btn-dark ms-2">Register</a>
-          </li>
-        }
+        <li class="nav-item">
+          <a class="nav-link fw-bold text-dark" routerLink="/quien-soy">Sobre Mi</a>
+        </li>
+
+        <!-- Botón cerrar sesión si está logueado -->
+        <li class="nav-item" *ngIf="authService.isLoggedIn()">
+          <button class="btn btn-danger ms-2" (click)="logout()">Cerrar sesión</button>
+        </li>
+
+        <!-- Login/Register si NO está logueado -->
+        <li class="nav-item" *ngIf="!authService.isLoggedIn()">
+          <a routerLink="/login" class="btn btn-danger ms-2">Login</a>
+        </li>
+        <li class="nav-item" *ngIf="!authService.isLoggedIn()">
+          <a routerLink="/register" class="btn btn-dark ms-2">Register</a>
+        </li>
       </ul>
     </div>
   </div>

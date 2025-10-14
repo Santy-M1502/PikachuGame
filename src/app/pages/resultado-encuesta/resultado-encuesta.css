@@ -1,0 +1,114 @@
+.resultados-container {
+  position: relative;
+  padding: 60px 20px;
+  min-width: 98dvw;
+  margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  background: linear-gradient(135deg, #fecb00 0%, #ff9400 100%);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  min-height: 100vh;
+}
+
+h2 {
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 30px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,1);
+}
+
+/* Overlay de carga fullscreen */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.loading-text {
+  font-size: 1.5rem;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Tabla y estilos */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: rgba(255,255,255,0.9);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #ff6f00;
+  color: #fff;
+  font-weight: 600;
+}
+
+tr:nth-child(even) {
+  background-color: rgba(255,255,255,0.85);
+}
+
+tr:hover {
+  background-color: rgba(255,111,0,0.2);
+  transform: scale(1.01);
+  transition: all 0.2s ease;
+}
+
+button.btn-siguiente {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #ffb300;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button.btn-siguiente:hover {
+  background-color: #e08e1a;
+  transform: scale(1.05);
+}
+
+.promedios {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,1);
+}
+
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr { display: block; }
+  tr { margin-bottom: 15px; }
+  th { display: none; }
+  td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+}

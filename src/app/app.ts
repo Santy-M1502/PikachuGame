@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { NavigationEnd, RouterModule, RouterOutlet, Router } from '@angular/router';
-import { NavBar } from './components/nav-bar/nav-bar';
+import { NavbarComponent } from './components/nav-bar/nav-bar';
 import { Footer } from './components/footer/footer';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { InactivityService } from './services/inactivity-service';
 
 @Component({
   selector: 'app-root',
-  imports: [  CommonModule, RouterModule, NavBar ],
+  imports: [  CommonModule, RouterModule, NavbarComponent ],
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
 })

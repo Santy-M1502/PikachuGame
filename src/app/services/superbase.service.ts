@@ -204,4 +204,8 @@ export class SupabaseService {
     return await this.getPuntajesPorUsuarios(ids, juego_id, 10);
   }
 
+  async getEncuestas() {
+    return this.client.from('encuestas').select('*');
+  }
+
 }

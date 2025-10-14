@@ -9,14 +9,16 @@
   </header>
 
   <section class="chat-body" #body>
-    <div *ngIf="getMessages().length === 0" class="empty">
+    @if(getMessages().length === 0){
+    <div class="empty">
       Bienvenido — escribe abajo para empezar
     </div>
+    }
     <div *ngFor="let msg of chatService.messages()" 
          [ngClass]="{ 'mio': msg.user_id === userId(), 'otro': msg.user_id !== userId() }">
       <div class="meta">
         <span class="name">{{ msg.usuario ? (msg.usuario.nombre + ' ' + msg.usuario.apellido) : 'Anon' }}</span>
-        <span class="time" *ngIf="msg.created_at">{{ msg.created_at | date: 'shortTime' }}</span>
+        @if(msg.created_at){<span class="time">{{ msg.created_at | date: 'shortTime':'America/Argentina/Buenos_Aires' }}</span>}
       </div>
       <div class="bubble">{{ msg.text }}</div>
     </div>

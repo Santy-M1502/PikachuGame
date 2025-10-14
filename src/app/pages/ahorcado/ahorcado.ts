@@ -5,6 +5,7 @@ import { PokemonService } from '../../services/api.service';
 import { SupabaseService } from '../../services/superbase.service';
 import { supabase } from '../../../supabase.config';
 import { CanComponentDeactivate } from '../../guards/can-deactivate-guard';
+import { PokemonGenerationService } from '../../services/pokemon-generation.service';
 
 interface Juego {
   id: number;
@@ -30,10 +31,13 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
   horca = `../../../assets/ahorcado/step1.png`
   loading = false
   juego!: Juego;
-
+  puntos : number = 0;
   tiempoInicio: number = 0;
   tiempoTranscurrido = signal(0);
   timerInterval: any;
+  selectedGeneration = 1;
+  range = { from: 1, to: 151 };
+
 
   letras: string[] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   private resolveFn: ((value: boolean) => void) | null = null;
@@ -44,12 +48,34 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
   constructor(
     private apiService: PokemonService,
     private supabaseService: SupabaseService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private genService: PokemonGenerationService
   ) {}
 
   ngOnInit() {
     this.pantalla = 'inicio';
+    this.range = this.genService.getRange(this.selectedGeneration)
     this.initJuego();
+  }
+
+  salirConLoading(waitMs = 700) {
+    if (this.loading) return;
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      this.salidaMostrarModal();
+      this.cdr.detectChanges();
+    }, waitMs);
+  }
+
+  private salidaMostrarModal() {
+    this.mostrarModalSalir = true;
+  }
+
+  onSelectGeneration(gen: number) {
+    this.selectedGeneration = gen;
+    this.range = this.genService.getRange(gen);
+    console.log(`Seleccionada generación ${gen} (${this.range.from} - ${this.range.to})`);
   }
 
   ngOnDestroy() {
@@ -92,6 +118,8 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
   }
 
   comenzarJuego() {
+    this.puntos = 0
+    this.gano = false
     this.juegoEnCurso = true;
     this.pantalla = 'juego';
     if (!this.palabraSecreta) {
@@ -120,10 +148,16 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
 
   loadPokemons() {
     this.loading = true;
-    this.apiService.getPokemonList(0).subscribe(response => {
-      this.pokemons = response.results;
-      const numeroRandom = this.getRandomInt(0, this.pokemons.length);
-      this.showPokemonDetails(this.pokemons[numeroRandom]);
+    const { from, to } = this.range;
+    const numeroRandom = this.getRandomInt(from, to + 1); // genera dentro del rango
+
+    // 🔹 cambiamos la lógica para usar el ID del Pokémon en vez del offset
+    this.apiService.getPokemonDetails(numeroRandom.toString()).subscribe(details => {
+      this.selectedPokemon = details;
+      this.palabraSecreta = this.limpiarNombrePokemon(details.name.toLowerCase());
+      this.adivinados = [];
+      this.intentos = 6;
+      this.loading = false;
     });
   }
 
@@ -161,14 +195,27 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
 
     if (todasAdivinadas) {
       this.gano = true;
+      this.calcularPuntaje(); 
       this.pantalla = 'fin';
       this.finalizarJuego();
     } else if (this.intentos <= 0) {
       this.gano = false;
+      this.calcularPuntaje();
       this.pantalla = 'fin';
       this.finalizarJuego();
     }
   }
+
+  private calcularPuntaje() {
+    const largoPalabra = this.palabraSecreta.length;
+    const basePorLetra = 5;
+    const bonusIntentos = this.intentos * 10;
+    const tiempoSegundos = this.tiempoTranscurrido();
+    const bonusTiempo = Math.max(0, Math.floor((60 - tiempoSegundos) * 2));
+
+    this.puntos = (largoPalabra * basePorLetra) + bonusIntentos + bonusTiempo;
+  }
+
 
   private finalizarJuego() {
     clearInterval(this.timerInterval);
@@ -178,17 +225,18 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
   }
 
   reiniciarJuego() {
-    this.adivinados = [];
-    this.intentos = 6;
-    this.errores = 0;
-    this.palabraSecreta = '';
-    this.selectedPokemon = null;
-    this.horca = `../../../assets/ahorcado/step1.png`;
-    this.gano = false;
-    this.pantalla = 'inicio'; 
-    this.juegoEnCurso = false;
-    this.loadPokemons();
-  }
+  this.adivinados = [];
+  this.intentos = 6;
+  this.errores = 0;
+  this.palabraSecreta = '';
+  this.selectedPokemon = null;
+  this.horca = `../../../assets/ahorcado/step1.png`;
+  this.gano = false;
+  this.puntos = 0;
+  this.pantalla = 'inicio';
+  this.juegoEnCurso = false;
+}
+
 
   async guardarPuntaje() {
     if (!this.juego) return;
@@ -217,12 +265,12 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
     const bonusIntentos = this.intentos * 10;
     const tiempoSegundos = this.tiempoTranscurrido();
     const bonusTiempo = Math.max(0, Math.floor((60 - tiempoSegundos) * 2));
-    const puntos = (largoPalabra * basePorLetra) + bonusIntentos + bonusTiempo;
+    this.puntos = (largoPalabra * basePorLetra) + bonusIntentos + bonusTiempo;
 
     try {
       await this.supabaseService.crearPuntaje({
         juego_id: this.juego.id,
-        puntos,
+        puntos : this.puntos,
         tiempo: this.tiempoTranscurrido(),
         user_id: usuario.id 
       });
@@ -232,7 +280,7 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
   }
 
   salirDelJuego() {
-    this.mostrarModalSalir = true;
+    this.salirConLoading();
   }
 
   confirmarSalir() {
@@ -243,6 +291,7 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
       this.resolveFn = null;
     }
   }
+
   cancelarSalir() {
     this.mostrarModalSalir = false;
     if (this.resolveFn) {

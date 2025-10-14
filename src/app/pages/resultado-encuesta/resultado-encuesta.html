@@ -1,0 +1,47 @@
+<app-nav-bar></app-nav-bar>
+<div class="resultados-container">
+
+  <h2>Resultados de Encuestas</h2>
+
+  <!-- Overlay de carga -->
+  <div class="loading-overlay" *ngIf="loading">
+    <div class="loading-text">Cargando...</div>
+  </div>
+
+  <!-- Tabla de encuestas -->
+  <table *ngIf="!loading && displayedEncuestas.length > 0">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Edad</th>
+        <th>Teléfono</th>
+        <th>Pregunta 1</th>
+        <th>Pregunta 2</th>
+        <th>Pregunta 3</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of displayedEncuestas">
+        <td>{{ e.nombre }}</td>
+        <td>{{ e.apellido }}</td>
+        <td>{{ e.edad }}</td>
+        <td>{{ e.telefono }}</td>
+        <td>{{ e.pregunta1 }}</td>
+        <td>{{ e.pregunta2 }}</td>
+        <td>{{ e.pregunta3 }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button *ngIf="!loading && (page + 1) * pageSize < encuestas.length"
+          class="btn-siguiente" (click)="siguientePagina()">Siguiente 10</button>
+
+  <div class="promedios" *ngIf="!loading && encuestas.length > 0">
+    <p>Promedio Pregunta 1: {{ promedio1 | number:'1.1-2' }}</p>
+    <p>Promedio Pregunta 2: {{ promedio2 | number:'1.1-2' }}</p>
+    <p>Promedio Pregunta 3: {{ promedio3 | number:'1.1-2' }}</p>
+  </div>
+
+  <p *ngIf="!loading && encuestas.length === 0">No hay encuestas registradas aún.</p>
+</div>

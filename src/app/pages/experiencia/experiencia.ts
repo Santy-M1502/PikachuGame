@@ -1,6 +1,6 @@
 import { Component, signal, computed, OnInit } from '@angular/core';
 import { SupabaseService, Puntaje, Juego } from '../../services/superbase.service';
-import { NavBar } from "../../components/nav-bar/nav-bar";
+import { NavbarComponent } from "../../components/nav-bar/nav-bar";
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SearchFilterPipe } from '../../pipes/search-filter-pipe';
@@ -11,7 +11,7 @@ type TipoOpcion = { value: string; label: string };
   selector: 'app-experiencia',
   templateUrl: './experiencia.html',
   styleUrls: ['./experiencia.css'],
-  imports: [NavBar, FormsModule, CommonModule, SearchFilterPipe]
+  imports: [NavbarComponent, FormsModule, CommonModule, SearchFilterPipe]
 })
 export class Experiencia implements OnInit {
   tipoSeleccionado = signal<string>('');

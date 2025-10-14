@@ -1,7 +1,7 @@
 .home-page {
   position: relative;
-  background: linear-gradient(135deg, #fecb00 0%, #ff9400 100%);
-  min-height: 100vh;
+  background: linear-gradient(135deg, #ffb300 0%, #ff6f00 100%);
+  min-height: 96vh;
   padding: 20px;
   box-sizing: border-box;
   display: flex;
@@ -16,8 +16,6 @@
   z-index: 1000;
   font-size: 50px;
   margin: 0;
-  margin: 1rem 0 0 1rem;
-  margin-top: 5rem;
 }
 
 .back a{

@@ -1,0 +1,144 @@
+/* ==============================
+   ENCUESTA FORM STYLES
+   ============================== */
+.encuesta-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 15px 20px 40px;
+  background: linear-gradient(135deg, #ffb300 0%, #ff6f00 100%);
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+}
+
+/* ===== TITULO ===== */
+.encuesta-container h2 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== FORMULARIO ===== */
+form {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 480px;
+  padding: 30px 25px;
+  box-sizing: border-box;
+  animation: fadeIn 0.5s ease;
+}
+
+/* ===== CAMPOS ===== */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.input-group input,
+.input-group select {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #ff6f00;
+  box-shadow: 0 0 5px rgba(255, 111, 0, 0.3);
+  outline: none;
+}
+
+/* ===== SLIDER ===== */
+input[type="range"] {
+  width: 100%;
+  accent-color: #ff6f00;
+  margin-top: 10px;
+}
+
+/* ===== RADIO ===== */
+.radio-group {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+}
+
+.radio-group label {
+  font-weight: 500;
+  color: #333;
+}
+
+.radio-group input {
+  accent-color: #ff6f00;
+  transform: scale(1.2);
+  margin-right: 6px;
+}
+
+/* ===== BOTON ===== */
+.encuesta-btn {
+  display: inline-block;
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(45deg, #ff8f00, #ff6f00);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.encuesta-btn:hover {
+  transform: scale(1.03);
+  background: linear-gradient(45deg, #ffa000, #ff7800);
+}
+
+/* ===== ERRORES ===== */
+.error {
+  color: #d32f2f;
+  font-size: 0.85rem;
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .encuesta-container {
+    padding: 60px 15px 30px;
+  }
+
+  form {
+    padding: 25px 20px;
+  }
+
+  .encuesta-btn {
+    font-size: 1rem;
+  }
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

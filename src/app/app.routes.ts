@@ -68,8 +68,14 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'admin-home',
-    loadComponent: () => import('./pages/admin-home/admin-home').then(m => m.AdminHome),
+    path:'encuesta',
+    loadComponent : () => import('./pages/encuesta/encuesta').then(m => m.EncuestaComponent),
+    canActivate: [AuthGuard],
+    canDeactivate: [canDeactivateGuard]
+  },
+  {
+    path: 'resultado-encuestas',
+    loadComponent: () => import('./pages/resultado-encuesta/resultado-encuesta').then(m => m.ResultadoEncuestasComponent),
     canActivate: [AuthGuard, RoleGuard]
   },
   { path: '**', component: NotFound }

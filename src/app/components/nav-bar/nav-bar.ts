@@ -1,41 +1,55 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { AuthService, UserData } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
-import { SupabaseService } from '../../services/superbase.service';
-import { AuthService } from '../../services/auth.service';
-import { FormsModule } from '@angular/forms';
-import { ChatButton } from "../chat-button/chat-button";
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-nav-bar',
-  standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ChatButton],
+  standalone: true,          // <- importante para poder importarlo
+  imports: [CommonModule, RouterModule],
   templateUrl: './nav-bar.html',
   styleUrls: ['./nav-bar.css']
 })
-export class NavBar {
+export class NavbarComponent implements OnInit, OnDestroy {
+  currentUser: UserData | null = null;
+  isAdmin = false;
+  private subscription!: Subscription;
 
-  menuOpen = false;
+  constructor(public authService: AuthService, private cdr: ChangeDetectorRef, private router: Router) {}
 
-  constructor(
-    private supabaseService: SupabaseService,
-    private router: Router,
-    public authService: AuthService
-  ) {}
+  ngOnInit(): void {
+  console.log('NavbarComponent initialized');
+  
+  this.subscription = this.authService.currentUser$
+    .subscribe(user => {
 
-  async logout() {
-    const { error } = await this.supabaseService.signOut();
-    if (error) {
-      console.error('Error al cerrar sesión:', error.message);
-      return;
-    }
+      if (!user) {
+        console.log('No user yet, skipping');
+        return;
+      }
 
-    localStorage.clear();
+      this.currentUser = user;
+      this.isAdmin = user.rol === 'admin';
+
+      this.cdr.detectChanges();
+      console.log('detectChanges called');
+    });
+}
+
+
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
+  logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
 
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
+  navigate(path: string): void {
+    this.router.navigate([path]);
   }
 }

@@ -112,81 +112,94 @@ button:hover {
 }
 
 /* === Modal de salir === */
+/* asegurar que modal quede por encima del loading */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.65);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.60);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 2000;
-  backdrop-filter: blur(3px);
-  animation: fadeIn 0.25s ease-in-out;
+  justify-content: center;
+  z-index: 99999; /* MUY arriba */
+  backdrop-filter: blur(2px);
 }
 
 .modal {
-  background: #ffffff;
-  color: #212529;
+  background: #fff;
+  color: #222;
   border-radius: 12px;
-  padding: 25px 30px;
+  padding: 20px;
   width: 90%;
-  max-width: 380px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  max-width: 420px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
   text-align: center;
-  animation: scaleIn 0.25s ease-out;
-}
-
-.modal h3 {
-  margin: 0 0 10px;
-  font-weight: 700;
-  font-size: 1.4rem;
-}
-
-.modal p {
-  font-size: 1rem;
-  color: #555;
-  margin-bottom: 20px;
+  z-index: 100000; /* encima del overlay por si acaso */
 }
 
 .modal-actions {
-  display: flex;
-  justify-content: space-between;
+  display:flex;
   gap: 10px;
+  margin-top: 12px;
+  justify-content: center;
 }
 
-.modal-actions button {
-  flex: 1;
-  padding: 10px 16px;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-
-/* Botón rojo: salir */
-.modal-actions button:first-child {
+.btn-salir {
   background: #e63946;
   color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
 }
-
-.modal-actions button:first-child:hover {
-  background: #c92e3b;
-  transform: translateY(-1px);
-}
-
-/* Botón azul: cancelar */
-.modal-actions button:last-child {
+.btn-cancelar {
   background: #3498db;
   color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-.modal-actions button:last-child:hover {
-  background: #2c80b9;
-  transform: translateY(-1px);
+/* Loading overlay menor prioridad que modal */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  z-index: 3000; /* menor que modal */
+}
+.loading-box {
+  background: rgba(255,255,255,0.98);
+  padding: 18px 22px;
+  border-radius: 12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.35);
+  min-width: 200px;
+}
+.loading-box p { color:#222; font-weight:700; margin:0; }
+
+.spinner{
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  border:6px solid rgba(0,0,0,0.08);
+  border-top-color: #f5a623;
+  animation: spin 0.9s linear infinite;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Ajustes responsivos para el nuevo botón/overlay */
+@media (max-width: 700px) {
+  .game-area { flex-direction: column; gap: 20px; }
+  .card-preview img { width: 110px; }
+  .loading-box { min-width: 160px; }
 }
 
 /* === Animaciones === */

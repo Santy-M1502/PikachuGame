@@ -85,7 +85,6 @@
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
   justify-items: center;
-  margin-top: 20px;
   background: linear-gradient(60deg, #f5a623, #c6d368);
   padding: .7rem;
   border-radius: 10px;
@@ -153,6 +152,89 @@
   background: #3498db;
   color: white;
 }
+
+.generacion-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.gen-btn {
+  background-color: #444;
+  color: #fff;
+  border: 2px solid #777;
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.gen-btn:hover {
+  background-color: #555;
+}
+
+.gen-btn.selected {
+  background-color: #ffcb05;
+  color: #2a75bb;
+  border-color: #2a75bb;
+  font-weight: bold;
+}
+
+.ahorcado-info-actions {
+  margin-top: 8px;
+  display: flex;
+  justify-content: end;
+}
+
+.ahorcado-btn-salir-mini {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #e74c3c;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 8px;
+}
+.ahorcado-btn-salir-mini:hover { transform: translateY(-2px); }
+
+.global-loading-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.55);
+  z-index: 9999;
+}
+
+.global-loader {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.95);
+  padding: 18px 22px;
+  border-radius: 12px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+  min-width: 180px;
+}
+
+.global-loader .spinner {
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  border:6px solid rgba(0,0,0,0.08);
+  border-top-color: #f5a623;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 
 @media (max-width: 600px) {
   .ahorcado-game {

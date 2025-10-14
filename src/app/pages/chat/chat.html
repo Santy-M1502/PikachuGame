@@ -15,7 +15,7 @@
       <div [ngClass]="{ 'mio': msg.user_id === userId, 'otro': msg.user_id !== userId }">
           <div class="meta">
             <span class="name">{{ msg.usuario ? (msg.usuario.nombre + ' ' + msg.usuario.apellido) : 'Anon' }} -</span>
-            @if(msg.created_at){ <span class="time"> {{ msg.created_at | date: 'dd/MM/yyyy HH:mm' }} </span> }
+            @if(msg.created_at){ <span class="time"> {{ msg.created_at | date: 'dd/MM/yyyy HH:mm': 'America/Argentina/Buenos_Aires' }} </span> }
           </div>
         <div class="bubble">{{ msg.text }}</div>
       </div>

@@ -12,7 +12,7 @@ export interface Usuario {
 export interface Message {
   id: number;
   text: string;
-  created_at: string | null;
+  created_at: Date | null;
   user_id: string | null;
   usuario_id: number | null;
   usuario?: Usuario | null;
@@ -55,15 +55,19 @@ export class ChatService {
       };
     }
 
+    const createdAtRaw = row.created_at ?? null;
+    const createdAt = createdAtRaw ? new Date(createdAtRaw) : null;
+
     return {
       id: row.id,
       text: row.text,
-      created_at: row.created_at ?? null,
+      created_at: createdAt, 
       user_id: row.user_id ?? null,
       usuario_id: row.usuario_id ?? null,
       usuario,
     };
   }
+
 
   async fetchMessages() {
     const { data, error } = await supabase

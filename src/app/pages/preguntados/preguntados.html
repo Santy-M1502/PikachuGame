@@ -1,13 +1,53 @@
 <div class="quiz-container">
 
-  @if(pantalla() === 'inicio'){
+  <!-- INICIO -->
+  <div *ngIf="pantalla() === 'inicio'">
     <div class="quiz-start">
       <h1>Preguntados Pokémon</h1>
+
+      <!-- Selector de generación -->
+      <div class="generacion-selector" *ngIf="generaciones.length">
+        <button
+          class="gen-btn"
+          *ngFor="let gen of generaciones"
+          (click)="seleccionarGeneracion(gen)"
+          [class.selected]="uiGeneracionSeleccionada() === gen"
+          [disabled]="juegoEnCurso"
+          type="button"
+        >
+          Gen {{ gen }}
+        </button>
+      </div>
+
+      <p>
+        Generación seleccionada:
+        <ng-container *ngIf="uiGeneracionSeleccionada() !== null; else sinSelec">
+          <strong>Gen {{ uiGeneracionSeleccionada() }}</strong>
+          <span *ngIf="genService">
+            (desde {{ genService.getRange(uiGeneracionSeleccionada()!).from }} hasta {{ genService.getRange(uiGeneracionSeleccionada()!).to }})
+          </span>
+        </ng-container>
+        <ng-template #sinSelec>
+          <strong>(ninguna — se usará Gen {{ generaciones.length ? generaciones[0] : 1 }} al comenzar)</strong>
+        </ng-template>
+      </p>
+
       <button (click)="comenzarJuego()">Comenzar</button>
     </div>
-  }
+  </div>
 
-  @if(pantalla() === 'juego' && preguntas().length){
+  <!-- JUEGO: loading inicial -->
+  <div *ngIf="pantalla() === 'juego' && loading()">
+    <div class="quiz-game quiz-loading-card">
+      <div class="loader-wrap">
+        <div class="spinner"></div>
+        <p>Cargando preguntas...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JUEGO: preguntas cargadas -->
+  <div *ngIf="pantalla() === 'juego' && !loading() && preguntas().length">
     <div class="quiz-game">
       <p>Tiempo: {{ tiempoTranscurrido() }}s</p>
       <div class="quiz-stats-panel">
@@ -17,48 +57,56 @@
         <button (click)="abrirModalSalir()">Salir</button>
       </div>
 
-      <div class="quiz-question-box">
+      <!-- overlay de transición entre preguntas -->
+      <div *ngIf="loadingPregunta()" class="pregunta-transition">
+        <div class="spinner small"></div>
+      </div>
+
+      <div class="quiz-question-box" [class.dimmed]="loadingPregunta()">
         <p>{{ preguntaActual.pregunta }}</p>
       </div>
 
-      <div class="quiz-options">
-        @for(opcion of preguntaActual.opciones; track $index){
-          <button (click)="responder(opcion)" [disabled]="respuestaSeleccionada()" [respuestaEstado]="getEstadoRespuesta(opcion)">
-            {{ opcion }}
-          </button>
-        }
+      <div class="quiz-options" [class.dimmed]="loadingPregunta()">
+        <button
+          *ngFor="let opcion of preguntaActual.opciones; let i = index"
+          (click)="responder(opcion)"
+          [disabled]="respuestaSeleccionada() || loadingPregunta()"
+          [respuestaEstado]="getEstadoRespuesta(opcion)"
+        >
+          {{ opcion }}
+        </button>
       </div>
     </div>
-  }
+  </div>
 
-  @if(pantalla() === 'juego' && !preguntas().length){
-    <div>
-      <p>Cargando preguntas...</p>
+  <!-- JUEGO: cargando preguntas (fallback) -->
+  <div *ngIf="pantalla() === 'juego' && !loading() && !preguntas().length">
+    <div class="quiz-game">
+      <p>No se encontraron preguntas.</p>
     </div>
-  }
+  </div>
 
-  @if(pantalla() === 'fin'){
+  <!-- FIN -->
+  <div *ngIf="pantalla() === 'fin'">
     <div class="quiz-end">
-      @if(gano()){<h2>¡Felicidades! Has completado el quiz</h2>}
-      @if(!gano()){<h2>Juego Terminado</h2>}
+      <h2 *ngIf="gano()">¡Felicidades! Has completado el quiz</h2>
+      <h2 *ngIf="!gano()">Juego Terminado</h2>
       <p>Tiempo: {{ tiempoTranscurrido() }}s</p>
       <p>Respuestas correctas: {{ puntaje() }} / {{ totalPreguntas }}</p>
       <button (click)="reiniciarJuego()">Jugar de nuevo</button>
     </div>
-  }
+  </div>
 
   <!-- Modal Salir -->
-  @if(mostrarModalSalir()){
-    <div class="quiz-modal-overlay">
-      <div class="quiz-modal">
-        <h3>¿Seguro que querés salir?</h3>
-        <p>Si salís, vas a perder el puntaje actual.</p>
-        <div class="quiz-modal-actions">
-          <button class="quiz-btn-salir" (click)="confirmarSalir()">Sí, salir</button>
-          <button class="quiz-btn-cancelar" (click)="cancelarSalir()">Cancelar</button>
-        </div>
+  <div *ngIf="mostrarModalSalir()" class="quiz-modal-overlay">
+    <div class="quiz-modal">
+      <h3>¿Seguro que querés salir?</h3>
+      <p>Si salís, vas a perder el puntaje actual.</p>
+      <div class="quiz-modal-actions">
+        <button class="quiz-btn-salir" (click)="confirmarSalir()">Sí, salir</button>
+        <button class="quiz-btn-cancelar" (click)="cancelarSalir()">Cancelar</button>
       </div>
     </div>
-  }
+  </div>
 
 </div>

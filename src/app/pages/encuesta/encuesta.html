@@ -1,0 +1,66 @@
+<app-nav-bar></app-nav-bar>
+<div class="encuesta-container">
+  <h2>Encuesta de Satisfacción</h2>
+
+  <form [formGroup]="encuestaForm" (ngSubmit)="enviarEncuesta()">
+
+    <!-- Datos del usuario -->
+    <div class="input-group">
+      <label>Nombre</label>
+      <input type="text" formControlName="nombre" placeholder="Tu nombre" />
+      <div *ngIf="submitted && encuestaForm.controls['nombre'].invalid" class="error">Nombre requerido.</div>
+    </div>
+
+    <div class="input-group">
+      <label>Apellido</label>
+      <input type="text" formControlName="apellido" placeholder="Tu apellido" />
+      <div *ngIf="submitted && encuestaForm.controls['apellido'].invalid" class="error">Apellido requerido.</div>
+    </div>
+
+    <div class="input-group">
+      <label>Edad</label>
+      <input type="number" formControlName="edad" placeholder="Tu edad" />
+      <div *ngIf="submitted && encuestaForm.controls['edad'].invalid" class="error">
+        Edad entre 18 y 99 años.
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>Teléfono</label>
+      <input type="text" formControlName="telefono" placeholder="Ej: 1122334455" maxlength="10" />
+      <div *ngIf="submitted && encuestaForm.controls['telefono'].invalid" class="error">
+        Solo números, máximo 10 caracteres.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- Pregunta 1 -->
+    <div class="input-group">
+      <label>1. ¿Qué tan satisfecho estás con la atención recibida?</label>
+      <input type="range" formControlName="pregunta1" min="1" max="5" step="1" />
+      <p>Valor: {{ encuestaForm.value.pregunta1 }}</p>
+    </div>
+
+    <!-- Pregunta 2 -->
+    <div class="input-group">
+      <label>2. ¿Qué tan buena considerás la calidad del servicio?</label>
+      <div class="radio-group">
+        <label *ngFor="let n of [1,2,3,4,5]">
+          <input type="radio" formControlName="pregunta2" [value]="n" /> {{n}}
+        </label>
+      </div>
+    </div>
+
+    <!-- Pregunta 3 -->
+    <div class="input-group">
+      <label>3. Puntúa la velocidad de atención</label>
+      <select formControlName="pregunta3">
+        <option value="">Seleccioná una opción</option>
+        <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{n}}</option>
+      </select>
+    </div>
+
+    <button type="submit" class="encuesta-btn">Enviar encuesta</button>
+  </form>
+</div>

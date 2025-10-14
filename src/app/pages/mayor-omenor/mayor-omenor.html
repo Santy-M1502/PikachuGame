@@ -1,26 +1,38 @@
-
 <div class="container">
 
-  @if(pantalla === 'inicio'){
+  <!-- INICIO -->
+  <div *ngIf="pantalla === 'inicio'">
     <div class="inicio">
       <h1>Mayor o Menor</h1>
       <p>Adivina si la siguiente carta será mayor o menor que la actual. ¡Acumula puntos y trata de no perder!</p>
       <p>Si presionas mayor y la carta era J, Q, K, o si presionas menor y la carta era 1, 2, 3 ¡ganas 5 puntos!</p>
+      <p>Cartas de ejemplo:</p>
+      <div class="card-preview">
+        <img [src]="cartaAleatoria?.imagen" alt="Carta ejemplo">
+      </div>
       <button (click)="comenzarJuego()">Comenzar</button>
     </div>
-  }
+  </div>
 
-  @if(pantalla === 'juego'){
+  <!-- JUEGO -->
+  <div *ngIf="pantalla === 'juego'">
     <div class="game">
       <div class="info">
+        <div class="top-actions">
+          <!-- Botón volver -->
+          <button class="btn-volver" (click)="volverInicio()">Volver</button>
+        </div>
+
         <h2>¿La siguiente carta será mayor o menor?</h2>
-        <p>Tu carta: {{ cartaAleatoria.nombre }} ({{ cartaAleatoria.valor }})</p>
+        <p>Tu carta: {{ cartaAleatoria?.nombre }} ({{ cartaAleatoria?.valor }})</p>
         <p *ngIf="resultado()">{{ resultado() }}</p>
         <p>Puntos: {{ puntos() }}</p>
+        <p>Tiempo: {{ tiempoTranscurrido() }} s</p>
       </div>
+
       <div class="game-area">
         <div class="card-container">
-          <img src="{{ cartaAleatoria.imagen }}" alt="{{ cartaAleatoria.nombre }}">
+          <img [src]="cartaAleatoria?.imagen" alt="{{ cartaAleatoria?.nombre }}">
         </div>
         <div class="buttons">
           <button (click)="compararCartas('mayor')">Mayor</button>
@@ -31,28 +43,38 @@
         </div>
       </div>
     </div>
-  }
-
-  @if(pantalla === 'fin'){
-  <div class="fin">
-    <h1>¡Perdiste!</h1>
-    <p>Tu puntaje final: {{ puntos() }}</p>
-    <button (click)="comenzarJuego()">Volver a jugar</button>
   </div>
-  }
 
-   @if (mostrarModalSalir) {
-    <div class="modal fade show d-block salir" tabindex="-1" style="background: rgba(0,0,0,0.6);">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-center p-3">
-          <h3>¿Seguro que querés salir?</h3>
-          <p>Si salís, vas a perder el puntaje actual.</p>
-          <div class="d-flex justify-content-between mt-3">
-            <button class="btn btn-danger px-3" (click)="confirmarSalir()">Sí, salir</button>
-            <button class="btn btn-primary px-3" (click)="cancelarSalir()">Cancelar</button>
-          </div>
-        </div>
+  <!-- FIN -->
+  <div *ngIf="pantalla === 'fin'">
+    <div class="fin">
+      <h1>¡Perdiste!</h1>
+      <p>Tu puntaje final: {{ puntos() }}</p>
+      <div class="fin-actions">
+        <button (click)="comenzarJuego()">Volver a jugar</button>
+        <button (click)="volverInicio()">Volver</button>
       </div>
     </div>
-  }
+  </div>
+
+  <!-- Modal Salir: overlay + caja (click fuera cancela) -->
+  <div *ngIf="mostrarModalSalir" class="modal-overlay" role="dialog" aria-modal="true" (click)="cancelarSalir()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3>¿Seguro que querés salir?</h3>
+      <p>Si salís, vas a perder el puntaje actual.</p>
+      <div class="modal-actions">
+        <button (click)="confirmarSalir()" class="btn-salir">Sí, salir</button>
+        <button (click)="cancelarSalir()" class="btn-cancelar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading overlay (solo al comenzar) -->
+  <div *ngIf="loading()" class="loading-overlay">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <p>Cargando partida...</p>
+    </div>
+  </div>
+
 </div>

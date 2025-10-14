@@ -3,12 +3,12 @@ import { ChatService, Message } from '../../services/chat.service';
 import { SupabaseService } from '../../services/superbase.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NavBar } from "../../components/nav-bar/nav-bar";
+import { NavbarComponent } from "../../components/nav-bar/nav-bar";
 
 @Component({
   selector: 'app-chat-page',
   standalone: true,
-  imports: [FormsModule, CommonModule, NavBar],
+  imports: [FormsModule, CommonModule, NavbarComponent],
   templateUrl: './chat.html',
   styleUrls: ['./chat.css']
 })

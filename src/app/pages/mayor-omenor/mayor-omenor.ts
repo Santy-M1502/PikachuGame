@@ -82,14 +82,15 @@ export class MayorOmenor implements OnInit, OnDestroy, CanComponentDeactivate {
   juegoEnCurso = false;
   private resolveFn: ((value: boolean) => void) | null = null;
 
+  loading = signal(false);
 
-   @HostListener('window:beforeunload', ['$event'])
-    unloadHandler(event: BeforeUnloadEvent) {
-      if (this.juegoEnCurso && this.pantalla === 'juego') {
-        event.preventDefault();
-        event.returnValue = 'Si salís, vas a perder el puntaje actual.';
-      }
+  @HostListener('window:beforeunload', ['$event'])
+  unloadHandler(event: BeforeUnloadEvent) {
+    if (this.juegoEnCurso && this.pantalla === 'juego') {
+      event.preventDefault();
+      event.returnValue = 'Si salís, vas a perder el puntaje actual.';
     }
+  }
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object,
               private supabaseService: SupabaseService) {}
@@ -143,26 +144,36 @@ export class MayorOmenor implements OnInit, OnDestroy, CanComponentDeactivate {
     return carta;
   }
 
-  comenzarJuego() {
+  private sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async comenzarJuego() {
+    if (this.loading()) return;
+    this.loading.set(true);
+
     this.juegoEnCurso = true;
     this.puntos.set(0);
     this.resultado.set('');
     this.cartasUsadas = [];
+
+    await this.sleep(600);
+
     this.cartaAleatoria = this.getCartaAleatoria();
+
     this.tiempoInicio = Date.now();
     this.tiempoTranscurrido.set(0);
-
     this.timerInterval = setInterval(() => {
       this.tiempoTranscurrido.set(Math.floor((Date.now() - this.tiempoInicio) / 1000));
     }, 1000);
 
     this.pantalla = 'juego';
+    this.loading.set(false);
   }
 
   compararCartas(eleccion: 'mayor' | 'menor') {
-    let puntosSumar = 1; // base por acertar
+    let puntosSumar = 1;
 
-    // Bonus por cartas extremas
     if ((eleccion === 'menor' && [1,2,3].includes(this.cartaAleatoria.valor)) ||
         (eleccion === 'mayor' && [11,12,13].includes(this.cartaAleatoria.valor))) {
       puntosSumar += 5;
@@ -191,6 +202,7 @@ export class MayorOmenor implements OnInit, OnDestroy, CanComponentDeactivate {
     this.tiempoTranscurrido.set(Math.floor((Date.now() - this.tiempoInicio) / 1000));
     this.pantalla = 'fin';
     this.guardarPuntaje();
+    this.juegoEnCurso = false;
   }
 
   async guardarPuntaje() {
@@ -213,20 +225,31 @@ export class MayorOmenor implements OnInit, OnDestroy, CanComponentDeactivate {
       return;
     }
 
-    // Solo se guarda el puntaje basado en cartas correctas + bonus
     const puntosFinales = this.puntos() + 135;
 
     try {
       const res = await this.supabaseService.crearPuntaje({
         juego_id: 2,
         puntos: puntosFinales,
-        tiempo: this.tiempoTranscurrido(), // se guarda pero no afecta puntos
+        tiempo: this.tiempoTranscurrido(),
         user_id: usuario.id
       });
       console.log('Puntaje guardado:', res);
     } catch (error) {
       console.error('Error guardando puntaje:', error);
     }
+  }
+
+  volverInicio() {
+    clearInterval(this.timerInterval);
+    this.juegoEnCurso = false;
+    this.loading.set(false);
+    this.cartasUsadas = [];
+    this.puntos.set(0);
+    this.resultado.set('');
+    this.cartaAleatoria = this.getCartaAleatoria();
+    this.tiempoTranscurrido.set(0);
+    this.pantalla = 'inicio';
   }
 
   ngOnInit() {

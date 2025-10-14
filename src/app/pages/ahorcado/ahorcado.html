@@ -1,9 +1,23 @@
 <div class="ahorcado-container">
-  @if (pantalla === 'inicio') {
+    @if (pantalla === 'inicio') {
     <div class="ahorcado-bienvenida">
       <h1>Ahorcado</h1>
-      <p>¡Bienvenido al juego del Ahorcado!</p>
-      <p>Intenta adivinar el nombre del Pokémon antes de que se acaben tus intentos.</p>
+      <p>¡Bienvenido al juego del Ahorcado Pokémon!</p>
+      <p>Elegí la generación con la que querés jugar:</p>
+
+      <div class="generacion-selector">
+        @for (gen of [1,2,3,4,5,6,7,8,9]; track $index) {
+          <button 
+            class="gen-btn"
+            [class.selected]="selectedGeneration === gen"
+            (click)="onSelectGeneration(gen)">
+            Gen {{ gen }}
+          </button>
+        }
+      </div>
+
+      <p>Pokémon del {{ range.from }} al {{ range.to }}</p>
+
       <button class="ahorcado-btn" (click)="comenzarJuego()">Empezar</button>
     </div>
   }
@@ -25,6 +39,9 @@
       </div>
 
       <div class="ahorcado-game-area">
+        <div class="ahorcado-info-actions">
+          <button class="ahorcado-btn-salir-mini" (click)="salirConLoading()">Salir</button>
+        </div>
         <div class="ahorcado-teclado">
           @for (letra of letras; track $index) {
             <button 
@@ -44,6 +61,7 @@
       @if (gano) {
         <h2>¡Felicidades! Has adivinado {{ palabraSecreta | uppercase }}</h2>
         <img [src]="selectedPokemon?.sprites?.front_default" alt="Pokemon">
+        <h2>Sumaste {{ this.puntos }} puntos!</h2>
       }
       @else {
         <h2>Juego Terminado</h2>
@@ -51,6 +69,7 @@
           <p>El Pokémon era: {{ palabraSecreta | uppercase }}</p>
           <img [src]="selectedPokemon?.sprites?.front_default" alt="Pokemon">
         </div>
+        <h2>Sumaste {{ this.puntos }} puntos!</h2>
       }
 
       <button class="ahorcado-btn" (click)="reiniciarJuego()">Jugar de nuevo</button>
@@ -70,3 +89,5 @@
     </div>
   }
 </div>
+
+
