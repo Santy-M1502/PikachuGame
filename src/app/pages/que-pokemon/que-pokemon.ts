@@ -1,190 +1,201 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, OnDestroy } from '@angular/core';
+import { Component, signal, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CanComponentDeactivate } from '../../guards/can-deactivate-guard';
-import { HostListener } from '@angular/core';
 import { SupabaseService } from '../../services/superbase.service';
-import { supabase } from '../../../supabase.config';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-que-pokemon',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './que-pokemon.html',
-  styleUrls: ['./que-pokemon.css'],
-  imports: [FormsModule, CommonModule]
+  styleUrls: ['./que-pokemon.css']
 })
-export class QuePokemon implements OnDestroy, CanComponentDeactivate  {
+export class QuePokemon {
 
-  mostrarModalSalir = signal(false);
-  juegoEnCurso = false;
-  private resolveFn: ((value: boolean) => void) | null = null;
-  private timer: any;
+  // UI
+  pantalla = signal<'inicio'|'juego'|'fin'>('inicio');
+  textoObjetivo = signal('');
+  textoTipeado = signal('');
+  tiempo = signal(0);
 
-  pantalla = signal<'inicio' | 'juego' | 'fin'>('inicio');
+  // Estadísticas
+  errores = signal(0);
+  precision = signal(0);
+  wpm = signal(0);
   puntos = signal(0);
-  tiempo = signal(0); // <-- ahora suma tiempo
-  pokemonActual = signal<any>(null);
-  pokemonSilueta = signal('');
-  opciones = signal<string[]>([]);
-  resultado = signal('');
+
   botonesHabilitados = signal(true);
+  juegoEnCurso = false;
+  PENALTY_PER_ERROR = 1;
+  resultado = signal<{ wpm:number; accuracy:number; puntos:number } | null>(null);
+
+  // Timer
+  private timerSub: Subscription | null = null;
+
+  frases = [
+    'Pikachu es electrico',
+    'Charizard vuela alto',
+    'Bulbasaur planta y veneno',
+    'Squirtle lanza agua',
+    'Eevee evoluciona con amistad',
+    'Mewtwo es muy poderoso'
+  ];
 
   constructor(private supabaseService: SupabaseService) {}
 
   @HostListener('window:beforeunload', ['$event'])
   unloadHandler(event: BeforeUnloadEvent) {
-    if (this.juegoEnCurso && this.pantalla() === 'juego') {
+    if (this.pantalla() === 'juego') {
       event.preventDefault();
       event.returnValue = 'Si salís, vas a perder el puntaje actual.';
     }
   }
 
-  pokemons = [
-    { nombre: 'Bulbasaur', id: 1 },
-    { nombre: 'Ivysaur', id: 2 },
-    { nombre: 'Venusaur', id: 3 },
-    { nombre: 'Charmander', id: 4 },
-    { nombre: 'Charmeleon', id: 5 },
-    { nombre: 'Charizard', id: 6 },
-    { nombre: 'Squirtle', id: 7 },
-    { nombre: 'Wartortle', id: 8 },
-    { nombre: 'Blastoise', id: 9 },
-    { nombre: 'Carterpie', id: 10 },
-    { nombre: 'Metapod', id: 11 },
-    { nombre: 'Butterfree', id: 12 },
-  ];
-
-  ngOnDestroy() {
-    clearInterval(this.timer);
-  }
-
-  canDeactivate(): boolean | Promise<boolean> {
-    if (this.juegoEnCurso && this.pantalla() === 'juego') {
-      this.mostrarModalSalir.set(true);
-      return new Promise<boolean>((resolve) => {
-        this.resolveFn = resolve;
-      });
-    }
-    return true;
-  }
-
-  confirmarSalir() {
-    this.mostrarModalSalir.set(false);
-    this.pantalla.set('inicio');
-    this.juegoEnCurso = false;
-    clearInterval(this.timer);
-    if (this.resolveFn) {
-      this.resolveFn(true);
-      this.resolveFn = null;
-    }
-  }
-
-  cancelarSalir() {
-    this.mostrarModalSalir.set(false);
-    if (this.resolveFn) {
-      this.resolveFn(false);
-      this.resolveFn = null;
-    }
-  }
-
   comenzarJuego() {
-    this.juegoEnCurso = true;
-    this.puntos.set(0);
-    this.tiempo.set(0);
+    this.reset();
+    this.textoObjetivo.set(this.frases[Math.floor(Math.random() * this.frases.length)]);
     this.pantalla.set('juego');
-    this.nuevoPokemon();
+    this.timerSub = interval(1000).subscribe(() => this.tiempo.update(t => t + 1));
   }
 
-  reiniciarJuego() {
-    clearInterval(this.timer);
+  onInput(value: string) {
+    this.textoTipeado.set(value);
+
+    const objetivo = this.textoObjetivo();
+    const tipeado = value;
+
+    let correctas = 0;
+    let errores = 0;
+
+    for (let i = 0; i < objetivo.length; i++) {
+      const c = tipeado[i];
+      if (c == null) continue;
+      if (c === objetivo[i]) correctas++;
+      else errores++;
+    }
+
+    this.errores.set(errores);
+    const precision = Math.round((correctas / objetivo.length) * 100);
+    this.precision.set(precision);
+
+    const segundos = Math.max(1, this.tiempo());
+    const wpm = Math.round(((tipeado.length / 5) / (segundos / 60)));
+    this.wpm.set(wpm);
+
+    const puntos = Math.round(wpm * (precision / 100));
+    this.puntos.set(puntos);
+
+    // Si terminó la frase
+    if (tipeado.length >= objetivo.length) this.terminarRonda();
+  }
+
+  private terminarRonda() {
+    this.botonesHabilitados.set(false);
+    this.limpiarTimer();
+
+    const objetivoLen = this.textoObjetivo().length;
+    const tipeado = this.textoTipeado();
+    const segundos = Math.max(1, this.tiempo());
+
+    // correctos reales
+    let correctos = 0;
+    for (let i = 0; i < Math.min(tipeado.length, objetivoLen); i++) {
+      if (tipeado[i] === this.textoObjetivo()[i]) correctos++;
+    }
+
+    // errores reales
+    const erroresAct = Math.max(0, tipeado.length - correctos);
+
+    // precisión penalizada
+    const penalizedCorrects = Math.max(0, correctos - (erroresAct * this.PENALTY_PER_ERROR));
+    const accuracyRatio = penalizedCorrects / Math.max(1, objetivoLen);
+    const accuracy = Math.round(accuracyRatio * 1000) / 10; // porcentaje con 1 decimal
+
+    // WPM
+    const wpm = Math.round(((tipeado.length / 5) / (segundos / 60)) * 10) / 10;
+
+    // puntos
+    const puntosFinal = Math.max(0, Math.round(wpm * accuracyRatio * 10 / 3));
+    this.puntos.set(puntosFinal);
+
+    this.resultado.set({ wpm, accuracy, puntos: puntosFinal });
+    this.pantalla.set('fin');
     this.juegoEnCurso = false;
-    this.puntos.set(0);
-    this.tiempo.set(0);
-    this.pantalla.set('inicio');
+
+    this.saveScore(puntosFinal).catch(console.error);
   }
 
-  async guardarPuntaje() {
-    const { data: userData } = await supabase.auth.getUser();
-    const auth_id = userData.user?.id;
+  private async saveScore(puntosFinal: number) {
 
-    if (!auth_id) {
-      console.error('Usuario no logueado');
-      return;
-    }
-
-    const { data: usuario } = await supabase
-      .from('usuarios')
-      .select('id')
-      .eq('auth_id', auth_id)
-      .single();
-
-    if (!usuario) {
-      console.error('Usuario no encontrado en tabla "usuarios"');
-      return;
-    }
-
-    const puntos = this.puntos();
-    const tiempo = this.tiempo();
+        const { data: userData } = await this.supabaseService.client.auth.getUser();
+        const auth_id = userData.user?.id;
+    
+        if (!auth_id) {
+          console.error('Usuario no logueado');
+          return;
+        }
+    
+        const { data: usuario } = await this.supabaseService.client
+          .from('usuarios')
+          .select('id')
+          .eq('auth_id', auth_id)
+          .single();
+    
+        if (!usuario) {
+          console.error('Usuario no encontrado en tabla "usuarios"');
+          return;
+        }
 
     try {
-      await this.supabaseService.crearPuntaje({
-        juego_id: 4, 
-        puntos,
-        tiempo,
+      const res = await this.supabaseService.crearPuntaje({
+        juego_id: 2,
+        puntos: this.puntos(),
+        tiempo: this.tiempo(),
         user_id: usuario.id
       });
-      console.log('✅ Puntaje guardado correctamente');
+      console.log('Puntaje guardado:', res);
     } catch (error) {
       console.error('Error guardando puntaje:', error);
     }
   }
 
-  nuevoPokemon() {
-    const indice = Math.floor(Math.random() * this.pokemons.length);
-    const seleccionado = this.pokemons[indice];
-    this.pokemonActual.set(seleccionado);
-
-    this.pokemonSilueta.set(`assets/quePokemon/siluetas/${seleccionado.id}-negro.png`);
-
-    this.generarOpciones();
-    this.resultado.set('');
-    this.botonesHabilitados.set(true);
-
-    clearInterval(this.timer);
-    this.timer = setInterval(() => {
-      this.tiempo.update(t => t + 1);
-    }, 1000);
+  private limpiarTimer() {
+    if (this.timerSub) { this.timerSub.unsubscribe(); this.timerSub = null; }
   }
 
-
-  generarOpciones() {
-    const nombres = this.pokemons.map(p => p.nombre);
-    let otrasOpciones = nombres.filter(n => n !== this.pokemonActual().nombre);
-    otrasOpciones = this.mezclarArray(otrasOpciones).slice(0,3);
-    this.opciones.set(this.mezclarArray([this.pokemonActual().nombre, ...otrasOpciones]));
+  private reset() {
+    this.textoTipeado.set('');
+    this.tiempo.set(0);
+    this.errores.set(0);
+    this.precision.set(0);
+    this.wpm.set(0);
+    this.puntos.set(0);
+    this.limpiarTimer();
   }
 
-  mezclarArray(array: any[]) {
-    return array.map(a => ({sort: Math.random(), value: a}))
-                .sort((a,b)=> a.sort-b.sort)
-                .map(a => a.value);
-  }
+  private async guardarPuntaje() {
+    try {
+      const { data: userData } = await this.supabaseService.client.auth.getUser();
+      const auth_id = userData?.user?.id;
+      if (!auth_id) throw new Error('No logueado');
 
-  seleccionarOpcion(opcion: string) {
-    clearInterval(this.timer);
-    this.botonesHabilitados.set(false);
+      const { data: usuario } = await this.supabaseService.client
+        .from('usuarios')
+        .select('id')
+        .eq('auth_id', auth_id)
+        .single();
 
-    // mostrar imagen a color
-    const seleccionado = this.pokemonActual();
-    this.pokemonSilueta.set(`assets/quePokemon/siluetas/${seleccionado.id}-color.png`);
+      await this.supabaseService.crearPuntaje({
+        juego_id: 4,
+        puntos: this.puntos(),
+        tiempo: this.tiempo(),
+        user_id: usuario?.id
+      });
 
-    if(opcion === seleccionado.nombre){
-      this.resultado.set('¡Correcto!');
-      this.puntos.update(p => p + 10);
-      setTimeout(() => this.nuevoPokemon(), 1000);
-    } else {
-      this.resultado.set(`Incorrecto. Era ${seleccionado.nombre}`);
-      this.guardarPuntaje();
-      setTimeout(() => this.pantalla.set('fin'), 1000);
+      console.log('✅ Puntaje guardado:', this.puntos());
+    } catch (e) {
+      console.error('❌ Error al guardar puntaje:', e);
     }
   }
 }

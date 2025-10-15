@@ -6,7 +6,7 @@
   color: #4F200D;
   min-height: 100dvh;
   text-align: center;
-  min-width: 100dvw;
+  min-width: 100%;
 }
 
 .loading, .error {

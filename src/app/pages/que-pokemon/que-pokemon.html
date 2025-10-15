@@ -1,70 +1,40 @@
-<div class="game-container">
+<div class="game-wrapper">
 
-  <!-- Pantalla de inicio -->
-  @if(pantalla() === 'inicio'){
-  <div class="inicio">
-    <h1>¡Quién es ese Pokémon?</h1>
-    <p>Observa la silueta y selecciona la opción correcta. ¡Acumula puntos!</p>
-    <button (click)="comenzarJuego()">Iniciar</button>
+  <!-- INICIO -->
+  <div *ngIf="pantalla() === 'inicio'" class="inicio">
+    <h1>⚡ Typing Challenge — Pokémon ⚡</h1>
+    <button (click)="comenzarJuego()">Comenzar</button>
   </div>
-  }
 
-  <!-- Pantalla de juego -->
-   @if(pantalla() === 'juego'){
-  <div class="retro-tv-container">
+  <!-- JUEGO -->
+  <div *ngIf="pantalla() === 'juego'" class="juego">
+    <p class="frase">{{ textoObjetivo() }}</p>
 
-    <div class="tv">
-      <div class="tv-screen">
-        <div class="pokemon-area">
-          <img [src]="pokemonSilueta()" alt="Silueta Pokémon" class="pokemon-image">
-        </div>
+    <textarea
+    [(ngModel)]="textoTipeado"
+    (ngModelChange)="onInput($event)"
+    placeholder="Escribí la frase aquí..."
+    autofocus
+    rows="3">
+  </textarea>
 
-        <div class="info-area">
-          <h2>¿Quién es este Pokémon?</h2>
-          <p>Puntos: {{ puntos() }}</p>
-          <p>Tiempo total: {{ tiempo() }}s</p>
-          @if(resultado()){<p>{{ resultado() }}</p>}
-
-          <div class="answer-buttons">
-            @for(opcion of opciones(); track $index){
-              <button (click)="seleccionarOpcion(opcion)" [disabled]="!botonesHabilitados()">
-                {{ opcion }}
-              </button>
-            }
-          </div>
-        </div>
-      </div>
-
-      <div class="tv-buttons">
-        <div class="button"></div>
-        <div class="button"></div>
-        <div class="button"></div>
-      </div>
+    <div class="stats">
+      <p>⏱️ Tiempo: {{ tiempo() }}s</p>
+      <p>❌ Errores: {{ errores() }}</p>
+      <p>🎯 Precisión: {{ precision() }}%</p>
+      <p>💨 WPM: {{ wpm() }}</p>
+      <p>⭐ Puntos: {{ puntos() }}</p>
     </div>
-
   </div>
-  }
 
-  <!-- Pantalla de fin -->
-   @if(pantalla() === 'fin'){
-    <div class="fin">
-      <h1>¡Juego Terminado!</h1>
-      <p>Tu puntaje final: {{ puntos() }}</p>
-      <button (click)="reiniciarJuego()">Volver a inicio</button>
-    </div>
-  }
+  <!-- FIN -->
+  <div *ngIf="pantalla() === 'fin'" class="fin">
+    <h2>¡Ronda terminada!</h2>
+    <p>🎯 Precisión: {{ precision() }}%</p>
+    <p>💨 WPM: {{ wpm() }}</p>
+    <p>⭐ Puntos: {{ puntos() }}</p>
 
-  @if(mostrarModalSalir()){
-    <div class="quiz-modal-overlay">
-      <div class="quiz-modal">
-        <h3>¿Seguro que querés salir?</h3>
-        <p>Si salís, vas a perder el puntaje actual.</p>
-        <div class="quiz-modal-actions">
-          <button class="quiz-btn-salir" (click)="confirmarSalir()">Sí, salir</button>
-          <button class="quiz-btn-cancelar" (click)="cancelarSalir()">Cancelar</button>
-        </div>
-      </div>
-    </div>
-  }
+    <button (click)="comenzarJuego()">Jugar otra vez</button>
+  </div>
 
 </div>
