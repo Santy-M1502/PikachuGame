@@ -1,4 +1,3 @@
-// inactivity.service.ts
 import { Injectable, Inject, NgZone, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';

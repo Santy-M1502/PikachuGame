@@ -1,6 +1,3 @@
-/* ==============================
-   ENCUESTA FORM STYLES
-   ============================== */
 .encuesta-container {
   display: flex;
   flex-direction: column;
@@ -13,7 +10,6 @@
   box-sizing: border-box;
 }
 
-/* ===== TITULO ===== */
 .encuesta-container h2 {
   color: #fff;
   font-size: 2rem;
@@ -22,7 +18,6 @@
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* ===== FORMULARIO ===== */
 form {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
@@ -34,7 +29,6 @@ form {
   animation: fadeIn 0.5s ease;
 }
 
-/* ===== CAMPOS ===== */
 .input-group {
   display: flex;
   flex-direction: column;
@@ -63,14 +57,12 @@ form {
   outline: none;
 }
 
-/* ===== SLIDER ===== */
 input[type="range"] {
   width: 100%;
   accent-color: #ff6f00;
   margin-top: 10px;
 }
 
-/* ===== RADIO ===== */
 .radio-group {
   display: flex;
   justify-content: space-between;
@@ -88,7 +80,6 @@ input[type="range"] {
   margin-right: 6px;
 }
 
-/* ===== BOTON ===== */
 .encuesta-btn {
   display: inline-block;
   width: 100%;
@@ -108,7 +99,6 @@ input[type="range"] {
   background: linear-gradient(45deg, #ffa000, #ff7800);
 }
 
-/* ===== ERRORES ===== */
 .error {
   color: #d32f2f;
   font-size: 0.85rem;
@@ -116,7 +106,6 @@ input[type="range"] {
   font-weight: 500;
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
   .encuesta-container {
     padding: 60px 15px 30px;
@@ -131,7 +120,6 @@ input[type="range"] {
   }
 }
 
-/* ===== ANIMACIONES ===== */
 @keyframes fadeIn {
   from {
     opacity: 0;

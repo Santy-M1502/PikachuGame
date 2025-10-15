@@ -28,7 +28,7 @@ export class ResultadoEncuestasComponent implements OnInit {
     private supabase: SupabaseService,
     private authService: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef   // ✅ inyectado correctamente
+    private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
@@ -43,7 +43,7 @@ export class ResultadoEncuestasComponent implements OnInit {
 
   async cargarEncuestas() {
     this.loading = true;
-    this.cdr.detectChanges();  // forzamos render inicial
+    this.cdr.detectChanges();
     try {
       const { data, error } = await this.supabase.getEncuestas();
       if (error) throw error;
@@ -52,7 +52,7 @@ export class ResultadoEncuestasComponent implements OnInit {
       this.calcularPromedios();
       this.actualizarPagina();
 
-      this.cdr.detectChanges(); // ⚡ forzamos Angular a actualizar la vista
+      this.cdr.detectChanges();
     } catch (err) {
       console.error('Error cargando encuestas:', err);
     } finally {

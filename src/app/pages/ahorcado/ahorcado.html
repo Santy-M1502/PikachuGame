@@ -55,6 +55,14 @@
       </div>
     </div>
   }
+  
+  <div class="ahorcado-image-wrap">
+    @if (loading) {
+      <div class="image-skeleton">
+        <div class="spinner"></div>
+      </div>
+    }
+  </div>
 
   @if (pantalla === 'fin') {
     <div class="ahorcado-final">

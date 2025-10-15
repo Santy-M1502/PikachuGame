@@ -13,13 +13,11 @@ import { interval, Subscription } from 'rxjs';
 })
 export class QuePokemon {
 
-  // UI
   pantalla = signal<'inicio'|'juego'|'fin'>('inicio');
   textoObjetivo = signal('');
   textoTipeado = signal('');
   tiempo = signal(0);
 
-  // Estadísticas
   errores = signal(0);
   precision = signal(0);
   wpm = signal(0);
@@ -30,7 +28,6 @@ export class QuePokemon {
   PENALTY_PER_ERROR = 1;
   resultado = signal<{ wpm:number; accuracy:number; puntos:number } | null>(null);
 
-  // Timer
   private timerSub: Subscription | null = null;
 
   frases = [
@@ -86,7 +83,6 @@ export class QuePokemon {
     const puntos = Math.round(wpm * (precision / 100));
     this.puntos.set(puntos);
 
-    // Si terminó la frase
     if (tipeado.length >= objetivo.length) this.terminarRonda();
   }
 
@@ -98,24 +94,19 @@ export class QuePokemon {
     const tipeado = this.textoTipeado();
     const segundos = Math.max(1, this.tiempo());
 
-    // correctos reales
     let correctos = 0;
     for (let i = 0; i < Math.min(tipeado.length, objetivoLen); i++) {
       if (tipeado[i] === this.textoObjetivo()[i]) correctos++;
     }
 
-    // errores reales
     const erroresAct = Math.max(0, tipeado.length - correctos);
 
-    // precisión penalizada
     const penalizedCorrects = Math.max(0, correctos - (erroresAct * this.PENALTY_PER_ERROR));
     const accuracyRatio = penalizedCorrects / Math.max(1, objetivoLen);
-    const accuracy = Math.round(accuracyRatio * 1000) / 10; // porcentaje con 1 decimal
+    const accuracy = Math.round(accuracyRatio * 1000) / 10;
 
-    // WPM
     const wpm = Math.round(((tipeado.length / 5) / (segundos / 60)) * 10) / 10;
 
-    // puntos
     const puntosFinal = Math.max(0, Math.round(wpm * accuracyRatio * 10 / 3));
     this.puntos.set(puntosFinal);
 

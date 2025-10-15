@@ -149,9 +149,8 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
   loadPokemons() {
     this.loading = true;
     const { from, to } = this.range;
-    const numeroRandom = this.getRandomInt(from, to + 1); // genera dentro del rango
+    const numeroRandom = this.getRandomInt(from, to + 1);
 
-    // 🔹 cambiamos la lógica para usar el ID del Pokémon en vez del offset
     this.apiService.getPokemonDetails(numeroRandom.toString()).subscribe(details => {
       this.selectedPokemon = details;
       this.palabraSecreta = this.limpiarNombrePokemon(details.name.toLowerCase());
@@ -162,6 +161,7 @@ export class Ahorcado implements OnInit, OnDestroy, CanComponentDeactivate {
   }
 
   showPokemonDetails(pokemon: any) {
+    this.loading = true;
     this.apiService.getPokemonDetails(pokemon.name).subscribe(details => {
       this.selectedPokemon = details;
       this.palabraSecreta = this.limpiarNombrePokemon(pokemon.name.toLowerCase())

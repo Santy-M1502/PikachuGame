@@ -1,13 +1,13 @@
 <div class="game-wrapper">
 
-  <!-- INICIO -->
-  <div *ngIf="pantalla() === 'inicio'" class="inicio">
+  @if(pantalla() === 'inicio'){
+  <div class="inicio">
     <h1>⚡ Typing Challenge — Pokémon ⚡</h1>
     <button (click)="comenzarJuego()">Comenzar</button>
-  </div>
+  </div>}
 
-  <!-- JUEGO -->
-  <div *ngIf="pantalla() === 'juego'" class="juego">
+  @if(pantalla() === 'juego'){
+  <div class="juego">
     <p class="frase">{{ textoObjetivo() }}</p>
 
     <textarea
@@ -22,19 +22,19 @@
       <p>⏱️ Tiempo: {{ tiempo() }}s</p>
       <p>❌ Errores: {{ errores() }}</p>
       <p>🎯 Precisión: {{ precision() }}%</p>
-      <p>💨 WPM: {{ wpm() }}</p>
+      <p>💨 Velocidad: {{ wpm() }}</p>
       <p>⭐ Puntos: {{ puntos() }}</p>
     </div>
-  </div>
+  </div>}
 
-  <!-- FIN -->
-  <div *ngIf="pantalla() === 'fin'" class="fin">
+  @if(pantalla() === 'fin'){
+  <div class="fin">
     <h2>¡Ronda terminada!</h2>
     <p>🎯 Precisión: {{ precision() }}%</p>
-    <p>💨 WPM: {{ wpm() }}</p>
+    <p>💨 Velocidad: {{ wpm() }}</p>
     <p>⭐ Puntos: {{ puntos() }}</p>
 
     <button (click)="comenzarJuego()">Jugar otra vez</button>
-  </div>
+  </div>}
 
 </div>

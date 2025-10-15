@@ -114,7 +114,7 @@ button.experiencia-btn:hover {
 
 @media (max-width: 768px) {
     .experiencia-container {
-        padding: 120px 10px 20px 10px; /* más espacio arriba */
+        padding: 120px 10px 20px 10px;
     }
 
     .experiencia-container select,

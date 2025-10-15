@@ -124,7 +124,6 @@ input:focus {
   text-decoration: underline;
 }
 
-/* Backdrop */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -132,7 +131,6 @@ input:focus {
   z-index: 2200;
 }
 
-/* Modal card base */
 .modal-card {
   position: fixed;
   right: 50%;
@@ -150,7 +148,6 @@ input:focus {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
-/* Header */
 .modal-header {
   padding: 14px 16px;
   border-bottom: 1px solid rgba(0,0,0,0.06);
@@ -162,7 +159,6 @@ input:focus {
 }
 .modal-header h3 { margin: 0; font-size: 16px; }
 
-/* Body */
 .modal-body {
   padding: 16px;
   color: #333;
@@ -170,7 +166,6 @@ input:focus {
   line-height: 1.4;
 }
 
-/* Footer / acciones */
 .modal-footer {
   padding: 12px 14px;
   display: flex;
@@ -180,7 +175,6 @@ input:focus {
   background: #fff;
 }
 
-/* Botones (paleta: #4F200D, #FFD93D, #e63946) */
 .btn {
   padding: 8px 12px;
   border-radius: 8px;
@@ -191,8 +185,8 @@ input:focus {
 }
 
 .btn-primary {
-  background: #4F200D; /* oscuro */
-  color: #FFD93D; /* amarillo */
+  background: #4F200D;
+  color: #FFD93D;
   border: 2px solid rgba(0,0,0,0.04);
 }
 .btn-primary:active { transform: translateY(1px); }
@@ -203,7 +197,6 @@ input:focus {
   border: 1px solid #e6ded9;
 }
 
-/* ajustar en pantallas muy chicas */
 @media (max-width: 420px) {
   .modal-card {
     right: 50%;

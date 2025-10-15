@@ -44,9 +44,8 @@ export class Preguntados implements OnInit, OnDestroy, CanComponentDeactivate {
   uiGeneracionSeleccionada = signal<number | null>(null);
   generacionActiva = signal<number>(1);
 
-  // Loading states
-  loading = signal(false); // para carga inicial de preguntas
-  loadingPregunta = signal(false); // para transición entre preguntas
+  loading = signal(false);
+  loadingPregunta = signal(false);
 
   constructor(
     private apiService: PokemonService,
@@ -100,14 +99,10 @@ export class Preguntados implements OnInit, OnDestroy, CanComponentDeactivate {
     }
   }
 
-  // small helper sleep
   private sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  // ----------------------------
-  // 🎮 Inicio del juego (con loading)
-  // ----------------------------
   async comenzarJuego() {
     const genElegida = this.uiGeneracionSeleccionada() ?? (this.generaciones.length ? this.generaciones[0] : 1);
     this.generacionActiva.set(genElegida);
@@ -123,7 +118,6 @@ export class Preguntados implements OnInit, OnDestroy, CanComponentDeactivate {
 
     const cantidad = 5;
 
-    // mostrar loader y limpiar preguntas actuales
     this.preguntas.set([]);
     this.loading.set(true);
     try {
@@ -147,9 +141,6 @@ export class Preguntados implements OnInit, OnDestroy, CanComponentDeactivate {
     this.uiGeneracionSeleccionada.set(gen);
   }
 
-  // ----------------------------
-  // 🧩 Generación de preguntas (usa getPokemonList(desde,hasta))
-  // ----------------------------
   async generarPreguntas(cantidad: number, gen?: number): Promise<Pregunta[]> {
     const preguntas: Pregunta[] = [];
 
@@ -263,9 +254,6 @@ export class Preguntados implements OnInit, OnDestroy, CanComponentDeactivate {
   get totalPreguntas() { return this.preguntas().length; }
   get preguntaActual(): Pregunta { return this.preguntas()[this.numeroPregunta()]; }
 
-  // ----------------------------
-  // 🧠 Lógica de respuesta (con transición/loading entre preguntas)
-  // ----------------------------
   async responder(opcion: string) {
     this.respuestaSeleccionada.set(true);
     this.opcionSeleccionada = opcion;
@@ -278,7 +266,6 @@ export class Preguntados implements OnInit, OnDestroy, CanComponentDeactivate {
 
     if (this.intentos() <= 0) clearInterval(this.timerInterval);
 
-    // esperar 1s para mostrar resultado
     await this.sleep(1000);
 
     const siguiente = this.numeroPregunta() + 1;
@@ -312,9 +299,7 @@ export class Preguntados implements OnInit, OnDestroy, CanComponentDeactivate {
       }
 
     } else {
-      // transición visual entre preguntas: mostrar loadingPregunta brevemente
       this.loadingPregunta.set(true);
-      // quitar selección visible (opcional small delay para que el usuario vea la respuesta)
       await this.sleep(300);
       this.numeroPregunta.set(siguiente);
       this.respuestaSeleccionada.set(false);

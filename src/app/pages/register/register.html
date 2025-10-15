@@ -93,10 +93,8 @@
     }
   </div>
 </div>
-<!-- Backdrop común para modal -->
 @if(showModal() || showSuccessModal()){<div (click)=closeModal() class="modal-backdrop"></div>}
 
-<!-- Modal: usuario ya registrado / aviso -->
  @if(showModal()){
 <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <header class="modal-header">
@@ -114,7 +112,6 @@
 </div>
 }
 
-<!-- Modal: registro exitoso -->
  @if(showSuccessModal()){
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="success-title">
     <header class="modal-header success">

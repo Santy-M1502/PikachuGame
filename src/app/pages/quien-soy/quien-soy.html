@@ -1,5 +1,4 @@
 <div class="quien-soy-page">
-  <!-- Loading -->
   @if(loading){
     <div class="d-flex justify-content-center align-items-center vh-100">
       <div class="text-center">
@@ -9,7 +8,6 @@
     </div>
   }
 
-  <!-- Error -->
   @if(error){
     <div class="container mt-5">
       <div class="alert alert-danger text-center fs-4" role="alert">
@@ -18,11 +16,9 @@
     </div>
   }
 
-  <!-- Contenido -->
   @if(usuario){
     <div class="container quien-soy-container">
       <div class="row justify-content-center">
-        <!-- Perfil -->
         <div class="col-md-6 col-lg-5 mb-4 mt-5">
           <div class="card border-0 shadow-sm text-center p-3" style="background-color: #ffffffbb;">
             <img [src]="usuario.avatar_url" alt="Foto de perfil" class="rounded-circle mx-auto border border-4 border-dark" style="width: 150px; height: 150px; object-fit: cover;">
@@ -37,7 +33,6 @@
           </div>
         </div>
 
-        <!-- Explicación -->
         <div class="col-md-8 mt-4">
           <div class="card border-0 shadow-sm p-4" style="background-color: #ffffffbb;">
             <h3 class="fw-bold text-dark mb-3">Mi juego propio</h3>
@@ -49,7 +44,6 @@
         </div>
       </div>
 
-      <!-- Chat Button -->
       <div class="text-center mt-4">
         <app-chat-button></app-chat-button>
       </div>

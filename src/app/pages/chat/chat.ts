@@ -30,12 +30,10 @@ export class Chat implements OnInit, OnDestroy, AfterViewInit {
   async ngOnInit() {
     await this.loadUser();
 
-    // Trae mensajes y luego scrollea al fondo
     await this.chatService.fetchMessages();
     this.cdr.detectChanges();
     setTimeout(() => this.scrollToBottom(), 100);
 
-    // Suscribirse a nuevos mensajes
     this.unsubscribeOnNewMessage = this.chatService.registerOnNewMessage(() => {
       this.cdr.detectChanges();
       this.scrollToBottom();
@@ -43,7 +41,6 @@ export class Chat implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Asegura que apenas renderiza, baje al último mensaje
     setTimeout(() => this.scrollToBottom(), 120);
   }
 

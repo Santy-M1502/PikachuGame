@@ -128,7 +128,6 @@ export class SupabaseService {
     return res;
   }
 
-  // 1. Top 10 usuarios con más puntos en general
   async getUsuariosConMasPuntosJS(limit: number = 10) {
     const { data, error } = await this.supabase.rpc('get_usuarios_con_mas_puntos', { limit_param: limit });
 
@@ -136,7 +135,6 @@ export class SupabaseService {
     return data;
   }
 
-  // 2. Top 10 usuarios con más puntos en un juego específico
   async getUsuariosConMasPuntosPorJuegoJS(juego_id: number, limit: number = 10) {
     const { data, error } = await this.supabase.rpc(
       'get_usuarios_con_mas_puntos_por_juego',
@@ -147,7 +145,6 @@ export class SupabaseService {
     return data;
   }
 
-  // 3. Top 10 usuarios con menor tiempo en un juego
   async getUsuariosConMejorTiempoJS(juego_id: number, limit: number = 10) {
     const { data, error } = await this.supabase.rpc(
       'get_usuarios_con_mejor_tiempo',
@@ -158,7 +155,6 @@ export class SupabaseService {
     return data;
   }
 
-  // 4. Top puntajes de un juego
   async getTopPuntajesJS(juego_id: number, limit: number = 10) {
     const { data, error } = await this.supabase.rpc(
       'get_top_puntajes_por_juego',

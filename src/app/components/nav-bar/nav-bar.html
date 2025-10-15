@@ -26,27 +26,31 @@
           <a class="nav-link fw-bold text-dark" routerLink="/encuesta">Encuesta</a>
         </li>
 
-        <!-- Link visible solo para admin -->
-        <li class="nav-item" *ngIf="isAdmin">
+        @if(isAdmin){
+        <li class="nav-item">
           <a class="nav-link fw-bold text-dark" routerLink="/resultado-encuestas">Resultado Encuestas</a>
         </li>
+        }
 
         <li class="nav-item">
           <a class="nav-link fw-bold text-dark" routerLink="/quien-soy">Sobre Mi</a>
         </li>
 
-        <!-- Botón cerrar sesión si está logueado -->
-        <li class="nav-item" *ngIf="authService.isLoggedIn()">
+        @if(authService.isLoggedIn()){
+        <li class="nav-item">
           <button class="btn btn-danger ms-2" (click)="logout()">Cerrar sesión</button>
-        </li>
+        </li>}
 
-        <!-- Login/Register si NO está logueado -->
-        <li class="nav-item" *ngIf="!authService.isLoggedIn()">
+        @if(!authService.isLoggedIn()){
+        <li class="nav-item">
           <a routerLink="/login" class="btn btn-danger ms-2">Login</a>
         </li>
-        <li class="nav-item" *ngIf="!authService.isLoggedIn()">
+        }
+
+        @if(!authService.isLoggedIn()){
+        <li class="nav-item">
           <a routerLink="/register" class="btn btn-dark ms-2">Register</a>
-        </li>
+        </li>}
       </ul>
     </div>
   </div>

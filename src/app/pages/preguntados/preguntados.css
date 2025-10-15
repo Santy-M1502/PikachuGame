@@ -1,12 +1,11 @@
-/* Contenedor principal */
 .quiz-container{
   box-sizing: border-box;
   padding: 40px 20px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center; /* centra horizontalmente */
-  justify-content: center; /* centra verticalmente */
+  align-items: center;
+  justify-content: center;
   background-image: url('../../../assets/preguntados/fondoPreguntados.jpg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -14,9 +13,7 @@
   gap: 20px;
 }
 
-/* Card común para inicio / juego / fin */
 .quiz-start, .quiz-game, .quiz-end{
-  /* ancho máximo y responsive */
   width: min(820px, 90%);
   max-width: 820px;
   margin: 0 auto;
@@ -31,7 +28,6 @@
   text-align: center;
 }
 
-/* Títulos */
 .quiz-start h1, .quiz-end h2{
   font-size: 2rem;
   font-weight: 700;
@@ -39,7 +35,6 @@
   color: #222;
 }
 
-/* Caja de pregunta */
 .quiz-question-box{
   width: 100%;
   margin: 18px 0;
@@ -55,7 +50,6 @@
   margin: 0;
 }
 
-/* Panel de stats: ocupa full width dentro de la card */
 .quiz-stats-panel{
   width: 100%;
   display: flex;
@@ -71,7 +65,6 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
-/* Botón salir pequeño dentro del panel */
 .quiz-stats-panel button {
   padding: 8px 12px;
   font-size: 0.9rem;
@@ -82,7 +75,6 @@
   cursor: pointer;
 }
 
-/* Opciones: grid en desktop, columna en móvil */
 .quiz-options{
   width: 100%;
   display: grid;
@@ -91,7 +83,6 @@
   margin-top: 10px;
 }
 
-/* Botones de opciones: full width y consistente */
 .quiz-options button{
   width: 100%;
   padding: 12px 16px;
@@ -119,7 +110,6 @@
   transform: none;
 }
 
-/* Next / generic buttons */
 .next-button, button {
   padding: 12px 20px;
   border-radius: 10px;
@@ -136,7 +126,6 @@
   transform: translateY(-3px);
 }
 
-/* Estilos para fin del juego */
 .quiz-end{
   color: #fff;
   background: linear-gradient(180deg, rgba(42,42,42,0.9) 0%, rgba(32,32,32,0.85) 100%);
@@ -149,7 +138,6 @@
   text-shadow: 0 2px 12px rgba(0,0,0,0.6);
 }
 
-/* Respuestas correcta / incorrecta (directive) */
 .respuesta-correcta {
   background-color: #27ae60 !important;
   color: white;
@@ -162,7 +150,6 @@
   box-shadow: 0 6px 14px rgba(231,76,60,0.16);
 }
 
-/* MODAL centrado y con mayor contraste */
 .quiz-modal-overlay {
   position: fixed;
   top: 0;
@@ -192,7 +179,6 @@
 .quiz-modal h3 { margin-bottom: 8px; font-size: 1.25rem; }
 .quiz-modal p { margin-bottom: 18px; color: #444; }
 
-/* Modal actions */
 .quiz-modal-actions {
   display: flex;
   gap: 12px;
@@ -201,7 +187,6 @@
 .quiz-btn-salir { background-color: #e74c3c; color: white; }
 .quiz-btn-cancelar { background-color: #2c82c9; color: white; }
 
-/* Generacion selector (pequeño ajuste visual) */
 .generacion-selector {
   display: flex;
   flex-wrap: wrap;
@@ -243,7 +228,6 @@
   font-weight:700;
 }
 
-/* Spinner base */
 .spinner{
   width:64px;
   height:64px;
@@ -262,7 +246,6 @@
   animation-duration: 0.8s;
 }
 
-/* transición entre preguntas: overlay centrado pequeño */
 .pregunta-transition{
   position: absolute;
   top: 50%;
@@ -279,7 +262,6 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 }
 
-/* dim the content slightly when transitioning */
 .dimmed{
   opacity: 0.45;
   pointer-events: none;

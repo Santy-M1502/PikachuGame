@@ -1,7 +1,6 @@
 <div class="container">
-
-  <!-- INICIO -->
-  <div *ngIf="pantalla === 'inicio'">
+  @if(pantalla==='inicio'){
+  <div>
     <div class="inicio">
       <h1>Mayor o Menor</h1>
       <p>Adivina si la siguiente carta será mayor o menor que la actual. ¡Acumula puntos y trata de no perder!</p>
@@ -12,20 +11,18 @@
       </div>
       <button (click)="comenzarJuego()">Comenzar</button>
     </div>
-  </div>
-
-  <!-- JUEGO -->
-  <div *ngIf="pantalla === 'juego'">
+  </div>}
+  @if(pantalla === 'juego'){
+  <div>
     <div class="game">
       <div class="info">
         <div class="top-actions">
-          <!-- Botón volver -->
           <button class="btn-volver" (click)="volverInicio()">Volver</button>
         </div>
 
         <h2>¿La siguiente carta será mayor o menor?</h2>
         <p>Tu carta: {{ cartaAleatoria?.nombre }} ({{ cartaAleatoria?.valor }})</p>
-        <p *ngIf="resultado()">{{ resultado() }}</p>
+        @if(resultado()){<p>{{ resultado() }}</p>}
         <p>Puntos: {{ puntos() }}</p>
         <p>Tiempo: {{ tiempoTranscurrido() }} s</p>
       </div>
@@ -43,10 +40,10 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>}
 
-  <!-- FIN -->
-  <div *ngIf="pantalla === 'fin'">
+  @if(pantalla === 'fin'){
+  <div>
     <div class="fin">
       <h1>¡Perdiste!</h1>
       <p>Tu puntaje final: {{ puntos() }}</p>
@@ -56,9 +53,10 @@
       </div>
     </div>
   </div>
+  }
 
-  <!-- Modal Salir: overlay + caja (click fuera cancela) -->
-  <div *ngIf="mostrarModalSalir" class="modal-overlay" role="dialog" aria-modal="true" (click)="cancelarSalir()">
+  @if(mostrarModalSalir){
+  <div class="modal-overlay" role="dialog" aria-modal="true" (click)="cancelarSalir()">
     <div class="modal" (click)="$event.stopPropagation()">
       <h3>¿Seguro que querés salir?</h3>
       <p>Si salís, vas a perder el puntaje actual.</p>
@@ -67,14 +65,14 @@
         <button (click)="cancelarSalir()" class="btn-cancelar">Cancelar</button>
       </div>
     </div>
-  </div>
+  </div>}
 
-  <!-- Loading overlay (solo al comenzar) -->
-  <div *ngIf="loading()" class="loading-overlay">
+  @if(loading()){
+  <div class="loading-overlay">
     <div class="loading-box">
       <div class="spinner"></div>
       <p>Cargando partida...</p>
     </div>
-  </div>
+  </div>}
 
 </div>

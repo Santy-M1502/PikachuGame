@@ -34,7 +34,6 @@ export class AuthService {
         console.log('AuthService constructor - parsed userData:', user);
         this.currentUserSubject.next(user);
       } else if (token && userId) {
-        // Cargar desde Supabase si hay token pero no hay userData
         this.getUser(userId)
           .then(user => console.log('Loaded user from Supabase:', user))
           .catch(err => console.error('Error loading user:', err));

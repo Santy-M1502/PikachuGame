@@ -94,17 +94,14 @@ export class Register {
       return;
     }
 
-    // Intento de signup
     const { data, error } = await this.supabaseService.signUp(
       this.email(),
       this.password()
     );
 
-    // Manejo error de cuenta existente
     if (error || !data.user) {
       const msg = error?.message ?? 'No se pudo crear el usuario.';
 
-      // Si indica que ya existe, abrimos modal con opción a ir a login
       if (/already|exists|duplicate|unique|registered/i.test(msg)) {
         this.modalMessage.set('Ya existe una cuenta con ese email. ¿Querés ir al inicio de sesión?');
         this.showModal.set(true);
@@ -115,7 +112,7 @@ export class Register {
       return;
     }
 
-    const authId = data.user.id; // UUID generado por Supabase Auth
+    const authId = data.user.id;
 
     try {
       const { data: profileData, error: profileError } = await this.supabaseService.insertProfile({
@@ -127,13 +124,11 @@ export class Register {
       });
 
       if (profileError) {
-        // Hacemos logout y mostramos error
         await this.supabaseService.client.auth.signOut();
         this.errorMessage.set(profileError.message || 'Error al crear el perfil. Contactá al administrador.');
         return;
       }
 
-      // Registro exitoso
       this.showSuccessModal.set(true);
     } catch (err: any) {
       await this.supabaseService.client.auth.signOut();

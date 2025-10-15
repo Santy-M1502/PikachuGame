@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-nav-bar',
-  standalone: true,          // <- importante para poder importarlo
+  standalone: true,       
   imports: [CommonModule, RouterModule],
   templateUrl: './nav-bar.html',
   styleUrls: ['./nav-bar.css']

@@ -2,7 +2,6 @@
 <div class="experiencia-container">
   <h2>Ranking de Usuarios</h2>
 
-  <!-- Input búsqueda -->
   <div style="margin-bottom:12px;">
     <input
       type="text"
@@ -12,7 +11,6 @@
     />
   </div>
 
-  <!-- Selección de tipo -->
   <label for="tipo">Selecciona tipo:</label>
   <select
     id="tipo"
@@ -22,7 +20,6 @@
     @for(t of tipos; track $index){<option [value]="t.value">{{ t.label }}</option>}
   </select>
 
-  <!-- Selección de juego (solo si aplica) -->
    @if(tipoSeleccionado() !== 'masPuntosGeneral' && tipoSeleccionado() !== ''){
     <div style="margin-top:8px;">
       <label for="juego">Selecciona juego:</label>
@@ -37,7 +34,6 @@
     </div>
     }
 
-  <!-- Tabla de resultados -->
    @if(puntajes().length > 0){
   <table style="margin-top:12px;">
     <thead>
@@ -59,7 +55,6 @@
   </table>
 }
 
-  <!-- Sin resultados -->
    @if(puntajes().length === 0 && tipoSeleccionado()){
     <p>
       No hay resultados para esta selección.
