@@ -40,3 +40,9 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Base de datos local del servidor de desarrollo
+/server/data.sqlite
+/server/data.sqlite-journal
+/server/data.sqlite-wal
+/server/data.sqlite-shm

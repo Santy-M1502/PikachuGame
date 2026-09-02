@@ -27,7 +27,25 @@ El diseño sigue una temática Pikachu, con colores cálidos y elementos diverti
 git clone https://github.com/Santy-M1502/PikachuGame.git
 cd PikachuGame
 npm install
-ng serve
+```
+
+Necesitás **dos procesos** corriendo a la vez (dos terminales):
+
+```bash
+npm run server    # API local + base de datos (http://localhost:3000)
+npm start         # ng serve (http://localhost:4200)
 ```
 
 Luego abrir [http://localhost:4200](http://localhost:4200) en el navegador.
+
+### 💾 Base de datos
+
+La app usaba Supabase. Ahora corre contra un backend local propio
+(**Express + SQLite**, carpeta `server/`) que no necesita Docker ni ningún
+servicio externo. Ver [`server/README.md`](server/README.md) para el detalle
+(esquema, usuarios de prueba, cómo resetear los datos).
+
+| Comando           | Qué hace                                             |
+|-------------------|-----------------------------------------------------|
+| `npm run server`  | Levanta la API; crea `server/data.sqlite` la 1ª vez |
+| `npm run db:reset`| Borra la base local (se recrea al iniciar el server)|

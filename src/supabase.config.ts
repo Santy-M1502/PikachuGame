@@ -1,6 +1,20 @@
-import { createClient } from '@supabase/supabase-js';
+/**
+ * La app usaba Supabase directamente desde el navegador. Ahora usa un
+ * backend local (Express + SQLite, ver carpeta `server/`) a traves de un
+ * cliente que imita la API de `@supabase/supabase-js`.
+ *
+ * Para desarrollo:
+ *   1. `npm run server`   -> levanta la API en http://localhost:3000
+ *   2. `npm start`        -> ng serve; la app ya apunta ahi
+ *
+ * La URL de la API se puede cambiar con la variable de entorno `API_URL`
+ * o, en runtime, con `localStorage.setItem('API_URL', 'http://...')`.
+ *
+ * Si algun dia vuelve Supabase, restaurar el cliente real:
+ *   import { createClient } from '@supabase/supabase-js';
+ *   export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+ */
 
-const SUPABASE_URL = "https://tuhoyfygiznomztqdasf.supabase.co"; 
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1aG95ZnlnaXpub216dHFkYXNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzMDA0ODYsImV4cCI6MjA3MTg3NjQ4Nn0.ZBLtrX00EYI7EKib3rISATHGR3X1S-HGMYJdyAdnGTE"; 
+import { createLocalClient } from './data/local-client';
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+export const supabase: any = createLocalClient();
